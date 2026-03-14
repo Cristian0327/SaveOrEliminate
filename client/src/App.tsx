@@ -157,6 +157,17 @@ function App() {
     };
   }, []);
 
+  // Detectar parámetro ?room= en URL
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const roomIdFromUrl = params.get('room');
+    if (roomIdFromUrl && roomIdFromUrl.length === 6) {
+      setPendingRoomId(roomIdFromUrl);
+      setCurrentScreen('enter-name');
+      setScreenHistory(['home', 'enter-name']);
+    }
+  }, []);
+
   const isHost = room?.players.find(p => p.id === socket.id)?.isHost || false;
 
   const renderScreen = () => {
