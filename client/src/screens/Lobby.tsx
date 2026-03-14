@@ -32,7 +32,7 @@ export default function Lobby({ room, isHost, onStartGame, onBack }: LobbyProps)
           display: 'grid', 
           gridTemplateColumns: 'repeat(auto-fill, minmax(160px, 1fr))', 
           gap: '1.5rem',
-          marginBottom: '3rem'
+          marginBottom: '5rem'
         }}>
           {room.players.map((player) => (
             <div key={player.id} style={{
@@ -72,7 +72,7 @@ export default function Lobby({ room, isHost, onStartGame, onBack }: LobbyProps)
         </div>
       </div>
 
-      <div className="card" style={{ alignItems: 'center', textAlign: 'center', marginBottom: '2rem', background: 'transparent', border: 'none', boxShadow: 'none' }}>
+      <div className="card" style={{ alignItems: 'center', textAlign: 'center', marginBottom: '4rem', background: 'transparent', border: 'none', boxShadow: 'none' }}>
         <p className="text-small" style={{ marginBottom: '0.5rem', fontSize: '0.9rem', opacity: 0.7 }}>SALA DE JUEGO</p>
         <h1 style={{ marginBottom: '1.5rem', fontSize: '2.5rem', letterSpacing: '6px' }}>
           {room.id}
@@ -87,7 +87,7 @@ export default function Lobby({ room, isHost, onStartGame, onBack }: LobbyProps)
         </button>
       </div>
 
-      <div>
+      <div style={{ marginTop: '3rem' }}>
         {isHost ? (
           <button
             className="primary"
