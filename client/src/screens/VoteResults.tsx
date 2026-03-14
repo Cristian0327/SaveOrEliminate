@@ -16,10 +16,6 @@ export default function VoteResults({ round, votes, players, isHost, onNextRound
     return players.find(p => p.id === playerId)?.name || 'Desconocido';
   };
 
-  const getSong = (songId: string) => {
-    return round.songs.find(s => s.id === songId);
-  };
-
   // Agrupar votos por canción
   const votesByColor = () => {
     const colorMap: Record<string, any> = {};
