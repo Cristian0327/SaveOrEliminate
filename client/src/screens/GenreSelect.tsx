@@ -35,7 +35,7 @@ export default function GenreSelect({ onSelect, onBack }: GenreSelectProps) {
     <>
       <Header onBack={onBack} showBackButton={!!onBack} />
       <h1>Selecciona un Género</h1>
-      <div style={{ maxWidth: '500px', margin: '0 auto' }}>
+      <div style={{ maxWidth: '900px', margin: '0 auto', width: '100%' }}>
         <input
           type="text"
           placeholder="Buscar género..."
@@ -43,7 +43,6 @@ export default function GenreSelect({ onSelect, onBack }: GenreSelectProps) {
           onChange={(e) => setSearchQuery(e.target.value)}
           style={{
             width: '100%',
-            maxWidth: '500px',
             padding: '15px',
             fontSize: '1rem',
             borderRadius: '10px',
@@ -59,21 +58,36 @@ export default function GenreSelect({ onSelect, onBack }: GenreSelectProps) {
           <p style={{ opacity: 0.7, marginBottom: '20px' }}>
             {searchQuery ? `${searchResults.length} resultados` : 'Top 20 géneros populares'}
           </p>
-          <div className="grid">
+          <div className="grid" style={{ gridTemplateColumns: 'repeat(auto-fill, minmax(120px, 1fr))', gap: '1.5rem' }}>
             {displayGenres.map((genre) => (
               <button
                 key={genre}
                 onClick={() => onSelect(genre)}
                 style={{
-                  padding: '20px',
+                  padding: '2rem 1.5rem',
                   fontSize: '1.1rem',
-                  background: 'rgba(255, 255, 255, 0.1)',
-                  border: '2px solid rgba(255, 255, 255, 0.3)',
-                  borderRadius: '10px',
+                  background: 'rgba(128, 22, 199, 0.1)',
+                  border: '2px solid rgba(128, 22, 199, 0.2)',
+                  borderRadius: '16px',
                   color: 'white',
                   cursor: 'pointer',
                   transition: 'all 0.3s',
                   textTransform: 'capitalize',
+                  fontWeight: 600,
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  minHeight: '100px',
+                }}
+                onMouseEnter={(e) => {
+                  (e.currentTarget as HTMLButtonElement).style.borderColor = 'rgba(128, 22, 199, 0.5)';
+                  (e.currentTarget as HTMLButtonElement).style.background = 'rgba(128, 22, 199, 0.2)';
+                  (e.currentTarget as HTMLButtonElement).style.transform = 'translateY(-3px)';
+                }}
+                onMouseLeave={(e) => {
+                  (e.currentTarget as HTMLButtonElement).style.borderColor = 'rgba(128, 22, 199, 0.2)';
+                  (e.currentTarget as HTMLButtonElement).style.background = 'rgba(128, 22, 199, 0.1)';
+                  (e.currentTarget as HTMLButtonElement).style.transform = 'translateY(0)';
                 }}
               >
                 {genre}

@@ -5,8 +5,7 @@ import Home from './screens/Home';
 import EnterName from './screens/EnterName';
 import Lobby from './screens/Lobby';
 import GameModeSelect from './screens/GameModeSelect';
-import MusicTypeSelect from './screens/MusicTypeSelect';
-import SongsPerRoundSelect from './screens/SongsPerRoundSelect';
+import MusicSetupSelect from './screens/MusicSetupSelect';
 import GenreSelect from './screens/GenreSelect';
 import ArtistSelect from './screens/ArtistSelect';
 import YearSelect from './screens/YearSelect';
@@ -22,8 +21,7 @@ type Screen =
   | 'enter-name'
   | 'lobby'
   | 'game-mode-select'
-  | 'music-type-select'
-  | 'songs-per-round'
+  | 'music-setup-select'
   | 'genre-select'
   | 'artist-select'
   | 'year-select'
@@ -198,30 +196,35 @@ function App() {
         return <GameModeSelect
           onSelect={(mode) => {
             setGameConfig({ ...gameConfig, mode });
-            navigateTo('music-type-select');
+            navigateTo('music-setup-select');
           }}
           onBack={goBack}
         />;
 
-      case 'music-type-select':
-        return <MusicTypeSelect
-          onSelect={(type) => {
-            setGameConfig({ ...gameConfig, selectionType: type });
-            navigateTo('songs-per-round');
-          }}
-          onBack={goBack}
-        />;
-
-      case 'songs-per-round':
-        return <SongsPerRoundSelect
-          onSelect={(count) => {
-            setGameConfig({ ...gameConfig, songsPerRound: count });
-            const type = gameConfig.selectionType;
-            if (type === 'genre') navigateTo('genre-select');
-            else if (type === 'artist') navigateTo('artist-select');
-            else if (type === 'year') navigateTo('year-select');
-            else if (type === 'decade') navigateTo('decade-select');
-            else if (type === 'versus') navigateTo('versus-select');
+      case 'music-setup-select':
+        return <MusicSetupSelect
+          onSelectType={(type, songsPerRound) => {
+            const config = { 
+              ...gameConfig, 
+              selectionType: type,
+              songsPerRound: songsPerRound || gameConfig.songsPerRound || 3
+            };
+            if (type === 'genre') {
+              setGameConfig(config);
+              navigateTo('genre-select');
+            } else if (type === 'artist') {
+              setGameConfig(config);
+              navigateTo('artist-select');
+            } else if (type === 'year') {
+              setGameConfig(config);
+              navigateTo('year-select');
+            } else if (type === 'decade') {
+              setGameConfig(config);
+              navigateTo('decade-select');
+            } else if (type === 'versus') {
+              setGameConfig(config);
+              navigateTo('versus-select');
+            }
           }}
           onBack={goBack}
         />;
@@ -267,41 +270,7 @@ function App() {
         />;
 
       case 'loading':
-        return (
-          <div style={{ textAlign: 'center', padding: '60px 20px' }}>
-            <div style={{ fontSize: '3rem', marginBottom: '20px' }}>🎵</div>
-            <h2 style={{ marginBottom: '10px' }}>Cargando canciones por año...</h2>
-            {loadingProgress && loadingProgress.total > 0 && (
-              <>
-                <p style={{ opacity: 0.7, marginBottom: '20px' }}>
-                  Año {loadingProgress.loaded} de {loadingProgress.total}
-                </p>
-                <div style={{
-                  background: 'rgba(255,255,255,0.15)',
-                  borderRadius: '8px',
-                  height: '12px',
-                  maxWidth: '400px',
-                  margin: '0 auto',
-                  overflow: 'hidden'
-                }}>
-                  <div style={{
-                    background: 'linear-gradient(90deg, #6c63ff, #ff6584)',
-                    height: '100%',
-                    width: `${(loadingProgress.loaded / loadingProgress.total) * 100}%`,
-                    transition: 'width 0.4s ease',
-                    borderRadius: '8px',
-                  }} />
-                </div>
-                <p style={{ marginTop: '12px', fontSize: '0.9rem', opacity: 0.5 }}>
-                  Esto puede tardar unos segundos según el rango de años
-                </p>
-              </>
-            )}
-            {(!loadingProgress || loadingProgress.total === 0) && (
-              <p style={{ opacity: 0.6 }}>Buscando canciones...</p>
-            )}
-          </div>
-        );
+        return <LoadingScreen progress={loadingProgress} onBack={goBack} />;
 
       case 'versus-select':
         return <VersusSelect
@@ -312,9 +281,6 @@ function App() {
           }}
           onBack={goBack}
         />;
-
-      case 'loading':
-        return <LoadingScreen onBack={goBack} />;
 
       case 'gameplay':
         return <GamePlay
@@ -337,6 +303,7 @@ function App() {
           isHost={isHost}
           roomId={room!.id}
           onNextRound={() => socket.emit('next-round', { roomId: room!.id })}
+          onEndGame={() => socket.emit('end-game', { roomId: room!.id })}
         />;
 
       case 'game-finished':

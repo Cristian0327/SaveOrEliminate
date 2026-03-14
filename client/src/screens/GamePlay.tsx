@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { socket } from '../socket';
 import Header from '../components/Header';
+import { Music, Play, RotateCcw } from 'lucide-react';
 import type { Round, GameMode } from '../types';
 
 interface GamePlayProps {
@@ -180,26 +181,10 @@ export default function GamePlay({ round, totalRounds, roomId, gameMode, selecti
       <audio ref={audioRef} style={{ display: 'none' }} />
 
       <h1>
-        {selectionType === 'year' && currentYear ? `🎵 AÑO ${currentYear}` : selectionType === 'decade' && currentDecade ? `🎵 DÉCADA DE LOS ${currentDecade}S` : `Ronda ${round.roundNumber}/${totalRounds}`}
+        RONDA {round.roundNumber}/{totalRounds}
       </h1>
-      {round.yearLabel && (
-        <div style={{
-          display: 'inline-block',
-          background: 'linear-gradient(135deg, #6c63ff, #ff6584)',
-          color: '#fff',
-          borderRadius: '30px',
-          padding: '6px 22px',
-          fontSize: '1.4rem',
-          fontWeight: 700,
-          letterSpacing: '2px',
-          marginBottom: '10px',
-          boxShadow: '0 4px 16px rgba(108,99,255,0.4)',
-        }}>
-          📅 {round.yearLabel}
-        </div>
-      )}
-      <h2>
-        {gameMode === 'save' ? '💚 Salva una canción' : '❌ Elimina una canción'}
+      <h2 style={{ fontSize: '2rem', marginBottom: '1rem', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '1rem' }}>
+        {gameMode === 'save' ? '💚 SALVA UNA CANCIÓN' : '❌ ELIMINA UNA CANCIÓN'}
       </h2>
 
       {currentPreviewIndex === -1 && (
@@ -210,32 +195,60 @@ export default function GamePlay({ round, totalRounds, roomId, gameMode, selecti
           <button 
             className="primary" 
             onClick={() => setCurrentPreviewIndex(0)}
-            style={{ fontSize: '1.2rem', padding: '20px 40px' }}
+            style={{ fontSize: '1.2rem', padding: '20px 40px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '1rem', margin: '0 auto' }}
           >
-            🎵 Comenzar Previews
+            <Music size={24} /> Comenzar Previews
           </button>
         </div>
       )}
 
       {showingPreview && currentPreviewIndex >= 0 && currentPreviewIndex < round.songs.length && (
-        <div style={{ textAlign: 'center', padding: '40px' }}>
-          <div className="loading" style={{ marginBottom: '20px', fontSize: '1.2rem' }}>
-            🎵 Preview {currentPreviewIndex + 1}/{round.songs.length} - 10 segundos
+        <div style={{ textAlign: 'center', padding: '1rem' }}>
+          <div className="loading" style={{ marginBottom: '1.5rem', fontSize: '1.5rem', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '1rem' }}>
+            <Music size={28} /> Reproduciendo...
           </div>
           
-          <div className="song-card" style={{ maxWidth: '500px', margin: '0 auto', pointerEvents: 'none', transform: 'scale(1.05)' }}>
-            <img src={round.songs[currentPreviewIndex].albumArt} alt={round.songs[currentPreviewIndex].name} />
-            <h3>{round.songs[currentPreviewIndex].name}</h3>
-            <p>{round.songs[currentPreviewIndex].artist}</p>
-          </div>
+          <img 
+            src={round.songs[currentPreviewIndex].albumArt} 
+            alt={round.songs[currentPreviewIndex].name}
+            style={{
+              width: '350px',
+              height: '350px',
+              borderRadius: '24px',
+              objectFit: 'cover',
+              margin: '0 auto 1.5rem',
+              boxShadow: '0 20px 60px rgba(128, 22, 199, 0.4)'
+            }}
+          />
+          <h3 style={{ fontSize: '1.8rem', textAlign: 'center', marginBottom: '0.5rem' }}>{round.songs[currentPreviewIndex].name}</h3>
+          <p style={{ fontSize: '1.2rem', opacity: 0.8, textAlign: 'center' }}>{round.songs[currentPreviewIndex].artist}</p>
         </div>
       )}
 
       {!showingPreview && (
         <>
           {votingStarted && (
-            <div className={`timer ${timer <= 3 ? 'warning' : ''}`}>
-              {timer}s
+            <div style={{ width: '100%', maxWidth: '700px', margin: '1rem auto' }}>
+              <div style={{
+                width: '100%',
+                height: '16px',
+                background: 'rgba(255,255,255,0.1)',
+                borderRadius: '8px',
+                overflow: 'hidden',
+                boxShadow: '0 0 15px rgba(0,0,0,0.3)'
+              }}>
+                <div style={{
+                  width: `${(timer / 10) * 100}%`,
+                  height: '100%',
+                  background: timer <= 3 ? 'var(--color-eliminate)' : 'var(--color-principal)',
+                  borderRadius: '8px',
+                  transition: 'width 0.2s linear, background 0.3s ease',
+                  boxShadow: timer <= 3 ? '0 0 20px var(--color-eliminate)' : '0 0 20px var(--color-principal)'
+                }} />
+              </div>
+              <div style={{ textAlign: 'center', marginTop: '1rem', fontSize: '1.3rem', fontWeight: 'bold', color: 'var(--color-principal)' }}>
+                {timer}s
+              </div>
             </div>
           )}
 
@@ -246,7 +259,7 @@ export default function GamePlay({ round, totalRounds, roomId, gameMode, selecti
                 onClick={handleStartVoting}
                 style={{ fontSize: '1.1rem', padding: '15px 30px' }}
               >
-                🗳️ VOTAR
+                VOTAR
               </button>
             </div>
           )}
@@ -257,13 +270,13 @@ export default function GamePlay({ round, totalRounds, roomId, gameMode, selecti
                 onClick={handleSelectNothing}
                 style={{ fontSize: '1rem', padding: '10px 20px', marginRight: '10px' }}
               >
-                ❌ NINGUNA
+                NINGUNA
               </button>
               <button 
                 onClick={handleSelectAny}
                 style={{ fontSize: '1rem', padding: '10px 20px' }}
               >
-                🎲 CUALQUIERA
+                CUALQUIERA
               </button>
             </div>
           )}
@@ -271,41 +284,74 @@ export default function GamePlay({ round, totalRounds, roomId, gameMode, selecti
           <div className="grid">
             {round.songs.map((song) => {
               const voteCount = voteCounts[song.id] || 0;
+              const isSelected = selectedSong === song.id;
+              const isEliminate = gameMode === 'eliminate';
+              
               return (
                 <div
                   key={song.id}
-                  className={`song-card ${selectedSong === song.id ? 'selected' : ''}`}
+                  className={`song-card ${isSelected ? 'selected' : ''}`}
                   onClick={() => votingStarted && previewsPlayed ? handleSongSelect(song.id) : null}
+                  onMouseEnter={(e) => {
+                    if (votingStarted && previewsPlayed) {
+                      const target = e.currentTarget as HTMLElement;
+                      const imgElement = target.querySelector('img') as HTMLImageElement;
+                      if (imgElement) {
+                        imgElement.style.boxShadow = isEliminate 
+                          ? '0 20px 50px rgba(250, 86, 73, 0.6)' 
+                          : '0 20px 50px rgba(139, 255, 98, 0.6)';
+                      }
+                      target.style.transform = 'translateY(-10px)';
+                    }
+                  }}
+                  onMouseLeave={(e) => {
+                    const target = e.currentTarget as HTMLElement;
+                    const imgElement = target.querySelector('img') as HTMLImageElement;
+                    if (imgElement) {
+                      imgElement.style.boxShadow = '0 10px 30px rgba(0,0,0,0.4)';
+                    }
+                    target.style.transform = isSelected ? 'scale(1.05)' : 'translateY(0)';
+                  }}
                   style={{ 
                     cursor: votingStarted && previewsPlayed ? 'pointer' : 'default', 
                     opacity: previewsPlayed ? 1 : 0.7,
-                    position: 'relative'
+                    position: 'relative',
                   }}
                 >
                   {votingStarted && voteCount > 0 && (
                     <div style={{
                       position: 'absolute',
-                      top: '10px',
-                      right: '10px',
-                      backgroundColor: '#4CAF50',
+                      top: '15px',
+                      right: '15px',
+                      backgroundColor: gameMode === 'eliminate' ? 'var(--color-eliminate)' : 'var(--color-save)',
                       color: 'white',
                       borderRadius: '50%',
-                      width: '40px',
-                      height: '40px',
+                      width: '45px',
+                      height: '45px',
                       display: 'flex',
                       alignItems: 'center',
                       justifyContent: 'center',
-                      fontSize: '1.2rem',
+                      fontSize: '1.3rem',
                       fontWeight: 'bold',
-                      zIndex: 10
+                      zIndex: 10,
+                      boxShadow: gameMode === 'eliminate' 
+                        ? '0 0 20px rgba(250, 86, 73, 0.6)' 
+                        : '0 0 20px rgba(139, 255, 98, 0.6)'
                     }}>
                       {voteCount}
                     </div>
                   )}
                   
-                  <img src={song.albumArt} alt={song.name} />
-                  <h3>{song.name}</h3>
-                  <p>{song.artist}</p>
+                  <img 
+                    src={song.albumArt} 
+                    alt={song.name}
+                    style={{
+                      boxShadow: '0 10px 30px rgba(0,0,0,0.4)',
+                      transition: 'all 0.3s ease'
+                    }}
+                  />
+                  <h3 style={{ fontSize: '1.2rem', textAlign: 'center', marginTop: '1rem' }}>{song.name}</h3>
+                  <p style={{ fontSize: '1rem', margin: 0, opacity: 0.8, textAlign: 'center' }}>{song.artist}</p>
                   
                   {previewsPlayed && !votingStarted && (
                     <button
@@ -314,18 +360,25 @@ export default function GamePlay({ round, totalRounds, roomId, gameMode, selecti
                         handleReplayPreview(song);
                       }}
                       style={{
-                        marginTop: '10px',
-                        padding: '8px 12px',
-                        backgroundColor: playingPreviewId === song.id ? '#ff6b6b' : '#4CAF50',
-                        color: 'white',
+                        marginTop: '0.8rem',
+                        padding: '0',
+                        backgroundColor: 'transparent',
+                        color: playingPreviewId === song.id ? 'var(--color-eliminate)' : 'var(--color-principal)',
                         border: 'none',
-                        borderRadius: '4px',
+                        borderRadius: '0',
                         cursor: 'pointer',
-                        fontSize: '0.9rem',
-                        width: '100%'
+                        fontSize: '1.4rem',
+                        width: 'auto',
+                        height: 'auto',
+                        transition: 'all 0.3s',
+                        fontWeight: 600,
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        margin: '0.8rem auto 0'
                       }}
                     >
-                      {playingPreviewId === song.id ? '⏹️ Detener' : '🔊 Repetir'}
+                      {playingPreviewId === song.id ? '⏸' : <RotateCcw size={24} />}
                     </button>
                   )}
                 </div>

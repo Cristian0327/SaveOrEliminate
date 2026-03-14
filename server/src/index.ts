@@ -134,6 +134,11 @@ io.on('connection', (socket) => {
     }
   });
 
+  socket.on('end-game', ({ roomId }) => {
+    console.log(`Host ended game in room ${roomId}`);
+    io.to(roomId).emit('game-finished');
+  });
+
   socket.on('reset-game', ({ roomId }) => {
     gameManager.resetGame(roomId);
     const room = gameManager.getRoom(roomId);
