@@ -11,14 +11,14 @@ interface VoteResultsProps {
   onEndGame?: () => void;
 }
 
-export default function VoteResults({ round, players, votes, isHost, onNextRound, onEndGame }: VoteResultsProps) {
-  const getPlayerName = (playerId: string) => {
-    return players.find(p => p.id === playerId)?.name || 'Desconocido';
-  };
+export default function VoteResults({ round, votes, isHost, onNextRound, onEndGame }: VoteResultsProps) {
+  // const getPlayerName = (playerId: string) => {
+  //   return players.find(p => p.id === playerId)?.name || 'Desconocido';
+  // };
 
-  const getSong = (songId: string) => {
-    return round.songs.find(s => s.id === songId);
-  };
+  // const getSong = (songId: string) => {
+  //   return round.songs.find(s => s.id === songId);
+  // };
 
   // Contar votos por canción
   const voteCountBySong = () => {

@@ -8,7 +8,7 @@ interface DecadeSelectProps {
 }
 
 export default function DecadeSelect({ onSelect, onBack }: DecadeSelectProps) {
-  const decades = [1960, 1970, 1980, 1990, 2000, 2010, 2020];
+  // const decades = [1960, 1970, 1980, 1990, 2000, 2010, 2020];
   const [startDecade, setStartDecade] = useState(1990);
   const [endDecade, setEndDecade] = useState(2020);
 

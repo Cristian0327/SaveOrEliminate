@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { socket } from '../socket';
 import Header from '../components/Header';
-import { Music, Play, RotateCcw } from 'lucide-react';
+import { Music, RotateCcw } from 'lucide-react';
 import type { Round, GameMode } from '../types';
 
 interface GamePlayProps {
@@ -49,7 +49,7 @@ function createSimpleAudio(audioElement: HTMLAudioElement) {
   };
 }
 
-export default function GamePlay({ round, totalRounds, roomId, gameMode, selectionType, currentYear, currentDecade, onTimerEnd }: GamePlayProps) {
+export default function GamePlay({ round, totalRounds, roomId, gameMode, onTimerEnd }: GamePlayProps) {
   const [selectedSong, setSelectedSong] = useState<string | null>(null);
   const [currentPreviewIndex, setCurrentPreviewIndex] = useState(-1);
   const [previewsPlayed, setPreviewsPlayed] = useState(false);

@@ -51,15 +51,15 @@ export default function Header({ onBack, showBackButton = true, showVolume = tru
     if (newVolume > 0) setIsMuted(false);
   };
 
-  const toggleMute = () => {
-    if (isMuted) {
-      applyVolume(volume);
-      setIsMuted(false);
-    } else {
-      setIsMuted(true);
-      applyVolume(0);
-    }
-  };
+  // const _toggleMute = () => {
+  //   if (isMuted) {
+  //     applyVolume(volume);
+  //     setIsMuted(false);
+  //   } else {
+  //     setIsMuted(true);
+  //     applyVolume(0);
+  //   }
+  // };
 
   return (
     <header className="header-bar">
