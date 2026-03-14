@@ -21,6 +21,7 @@ export default function EnterName({ onSubmit, onBack }: EnterNameProps) {
           onChange={(e) => setName(e.target.value)}
           maxLength={20}
           autoFocus
+          style={{ marginBottom: '2.5rem' }}
         />
         <button
           className="primary"
