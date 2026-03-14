@@ -242,7 +242,7 @@ export default function GamePlay({ round, totalRounds, roomId, gameMode, onTimer
                   height: '100%',
                   background: timer <= 3 ? 'var(--color-eliminate)' : 'var(--color-principal)',
                   borderRadius: '8px',
-                  transition: 'width 0.2s linear, background 0.3s ease',
+                  transition: 'width 1s linear, background 0.3s ease',
                   boxShadow: timer <= 3 ? '0 0 20px var(--color-eliminate)' : '0 0 20px var(--color-principal)'
                 }} />
               </div>
