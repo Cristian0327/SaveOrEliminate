@@ -25,19 +25,42 @@ body {
     radial-gradient(circle at 90% 80%, rgba(250, 86, 73, 0.15) 0%, transparent 20%);
   color: var(--color-text);
   min-height: 100vh;
+  max-height: 100vh;
   display: flex;
   justify-content: center;
   align-items: center;
   padding: 20px;
   padding-top: 60px;
   overflow-x: hidden;
+  overflow-y: hidden;
   -webkit-font-smoothing: antialiased;
 }
 
 #root {
   width: 100%;
   max-width: 1200px;
+  max-height: calc(100vh - 80px);
   margin: 0 auto;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding-right: 8px;
+}
+
+#root::-webkit-scrollbar {
+  width: 4px;
+}
+
+#root::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+#root::-webkit-scrollbar-thumb {
+  background: rgba(128, 22, 199, 0.3);
+  border-radius: 4px;
+}
+
+#root::-webkit-scrollbar-thumb:hover {
+  background: rgba(128, 22, 199, 0.5);
 }
 
 .screen-container {
@@ -47,6 +70,7 @@ body {
   width: 100%;
   animation: fadeIn 0.4s ease-out;
   padding-top: 40px;
+  max-height: 100%;
 }
 
 @keyframes fadeIn {

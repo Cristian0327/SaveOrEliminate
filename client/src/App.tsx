@@ -73,6 +73,11 @@ function App() {
       setRoom(updatedRoom);
     });
 
+    socket.on('player-left', ({ room, message }: { room: Room; message: string }) => {
+      setRoom(room);
+      console.log(message);
+    });
+
     socket.on('game-started', ({ round, totalRounds: total, currentYear, currentDecade, selectionType }: { round: Round; totalRounds: number; currentYear?: number; currentDecade?: number; selectionType?: string }) => {
       setCurrentRound(round);
       setTotalRounds(total);
@@ -144,6 +149,7 @@ function App() {
       socket.off('room-created');
       socket.off('room-joined');
       socket.off('player-joined');
+      socket.off('player-left');
       socket.off('game-loading');
       socket.off('game-started');
       socket.off('game-error');
