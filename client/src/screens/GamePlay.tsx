@@ -180,7 +180,7 @@ export default function GamePlay({ round, totalRounds, roomId, gameMode, onTimer
       <Header showBackButton={false} showVolume={true} />
       <audio ref={audioRef} style={{ display: 'none' }} />
 
-      <h1>
+      <h1 style={{ marginTop: '-1rem', marginBottom: '0.5rem' }}>
         RONDA {round.roundNumber}/{totalRounds}
       </h1>
       <h2 style={{ fontSize: '2rem', marginBottom: '1rem', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '1rem' }}>
@@ -212,8 +212,8 @@ export default function GamePlay({ round, totalRounds, roomId, gameMode, onTimer
             src={round.songs[currentPreviewIndex].albumArt} 
             alt={round.songs[currentPreviewIndex].name}
             style={{
-              width: '350px',
-              height: '350px',
+              width: '420px',
+              height: '420px',
               borderRadius: '24px',
               objectFit: 'cover',
               margin: '0 auto 1.5rem',

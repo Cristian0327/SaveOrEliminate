@@ -11,29 +11,31 @@ interface VoteResultsProps {
   onEndGame?: () => void;
 }
 
-export default function VoteResults({ round, votes, isHost, onNextRound, onEndGame }: VoteResultsProps) {
-  // const getPlayerName = (playerId: string) => {
-  //   return players.find(p => p.id === playerId)?.name || 'Desconocido';
-  // };
-
-  // const getSong = (songId: string) => {
-  //   return round.songs.find(s => s.id === songId);
-  // };
-
-  // Contar votos por canción
-  const voteCountBySong = () => {
-    const counts: Record<string, number> = {};
-    votes.forEach(vote => {
-      if (vote.songId !== 'NONE') {
-        counts[vote.songId] = (counts[vote.songId] || 0) + 1;
-      }
-    });
-    return counts;
+export default function VoteResults({ round, votes, players, isHost, onNextRound, onEndGame }: VoteResultsProps) {
+  const getPlayerName = (playerId: string) => {
+    return players.find(p => p.id === playerId)?.name || 'Desconocido';
   };
 
-  const voteCounts = voteCountBySong();
-  const songsWithVotes = round.songs.filter(song => voteCounts[song.id] && voteCounts[song.id] > 0);
-  const sortedSongs = songsWithVotes.sort((a, b) => (voteCounts[b.id] || 0) - (voteCounts[a.id] || 0));
+  const getSong = (songId: string) => {
+    return round.songs.find(s => s.id === songId);
+  };
+
+  // Agrupar votos por canción
+  const votesByColor = () => {
+    const colorMap: Record<string, any> = {};
+    round.songs.forEach(song => {
+      colorMap[song.id] = {
+        song,
+        voters: votes
+          .filter(v => v.songId === song.id)
+          .map(v => getPlayerName(v.playerId))
+      };
+    });
+    return colorMap;
+  };
+
+  const allVotesByColor = votesByColor();
+  const songsWithVotes = Object.values(allVotesByColor).filter(item => item.voters.length > 0);
 
   return (
     <>
@@ -57,34 +59,17 @@ export default function VoteResults({ round, votes, isHost, onNextRound, onEndGa
       )}
 
       <div className="vote-summary">
-        {sortedSongs.length > 0 ? (
-          sortedSongs.map((song) => {
-            const count = voteCounts[song.id] || 0;
-            const percentage = votes.length > 0 ? (count / votes.length) * 100 : 0;
-            return (
-              <div key={song.id} className="vote-song-bar">
-                <img src={song.albumArt} alt={song.name} />
-                <div className="song-name" style={{ fontWeight: 600, fontSize: '0.95rem' }}>{song.name}</div>
-                <div style={{ fontSize: '0.85rem', opacity: 0.7, marginBottom: '0.8rem' }}>{song.artist}</div>
-                <div style={{
-                  width: '100%',
-                  height: '10px',
-                  background: 'rgba(255, 255, 255, 0.1)',
-                  borderRadius: '5px',
-                  overflow: 'hidden',
-                  marginBottom: '0.8rem'
-                }}>
-                  <div style={{
-                    width: `${percentage}%`,
-                    height: '100%',
-                    background: 'linear-gradient(90deg, #8016C7, #6c63ff)',
-                    transition: 'width 0.5s ease'
-                  }} />
-                </div>
-                <div className="vote-count" style={{ fontSize: '1.3rem', fontWeight: 'bold', color: 'var(--color-principal)' }}>{count} votos ({Math.round(percentage)}%)</div>
+        {songsWithVotes.length > 0 ? (
+          songsWithVotes.map((item: any) => (
+            <div key={item.song.id} className="vote-song-bar">
+              <img src={item.song.albumArt} alt={item.song.name} />
+              <div className="song-name" style={{ fontWeight: 600, fontSize: '0.95rem' }}>{item.song.name}</div>
+              <div style={{ fontSize: '0.85rem', opacity: 0.7, marginBottom: '0.8rem' }}>{item.song.artist}</div>
+              <div style={{ fontSize: '1rem', lineHeight: '1.6', color: 'var(--color-principal)', fontWeight: 500 }}>
+                {item.voters.join(', ')}
               </div>
-            );
-          })
+            </div>
+          ))
         ) : (
           <p style={{ textAlign: 'center', opacity: 0.7, width: '100%' }}>
             Nadie votó en esta ronda
