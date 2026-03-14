@@ -181,23 +181,18 @@ io.on('connection', (socket) => {
   socket.on('disconnect', () => {
     console.log('User disconnected:', socket.id);
     
-    // Buscar al jugador en todas las salas y removerlo
-    for (const [roomId, room] of Array.from(rooms.entries())) {
-      const playerWasInRoom = room.players.find(p => p.id === socket.id);
-      if (playerWasInRoom) {
-        gameManager.removePlayer(roomId, socket.id);
-        
-        if (room.players.length > 0) {
-          // Notificar a los otros jugadores
-          io.to(roomId).emit('player-left', {
-            room,
-            message: `${playerWasInRoom.name} se ha desconectado`
-          });
-        } else {
-          // La sala se elimina automáticamente en gameManager.removePlayer
-          console.log(`Room ${roomId} deleted (no players left)`);
-        }
-        break;
+    const result = gameManager.findAndRemovePlayerFromAllRooms(socket.id);
+    if (result) {
+      const { roomId, room, playerName } = result;
+      
+      if (room.players.length > 0) {
+        // Notificar a los otros jugadores
+        io.to(roomId).emit('player-left', {
+          room: room,
+          message: `${playerName} se ha desconectado`
+        });
+      } else {
+        console.log(`Room ${roomId} deleted (no players left)`);
       }
     }
   });
