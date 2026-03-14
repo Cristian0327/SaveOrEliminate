@@ -78,7 +78,7 @@ function App() {
       console.log(message);
     });
 
-    socket.on('game-started', ({ round, totalRounds: total, currentYear, currentDecade, selectionType }: { round: Round; totalRounds: number; currentYear?: number; currentDecade?: number; selectionType?: string }) => {
+    socket.on('game-started', ({ round, totalRounds: total, currentYear, currentDecade, selectionType, mode }: { round: Round; totalRounds: number; currentYear?: number; currentDecade?: number; selectionType?: string; mode?: string }) => {
       setCurrentRound(round);
       setTotalRounds(total);
       if (currentYear !== undefined) {
@@ -89,6 +89,9 @@ function App() {
       }
       if (selectionType !== undefined) {
         setGameConfig(prev => ({ ...prev, selectionType: selectionType as any }));
+      }
+      if (mode !== undefined) {
+        setGameConfig(prev => ({ ...prev, mode: mode as any }));
       }
       setCurrentScreen('gameplay');
     });
@@ -112,7 +115,7 @@ function App() {
       setVotes(newVotes);
     });
 
-    socket.on('new-round', ({ round, totalRounds: total, currentYear, currentDecade, selectionType }: { round: Round; totalRounds: number; currentYear?: number; currentDecade?: number; selectionType?: string }) => {
+    socket.on('new-round', ({ round, totalRounds: total, currentYear, currentDecade, selectionType, mode }: { round: Round; totalRounds: number; currentYear?: number; currentDecade?: number; selectionType?: string; mode?: string }) => {
       setCurrentRound(round);
       setTotalRounds(total);
       if (currentYear !== undefined) {
@@ -123,6 +126,9 @@ function App() {
       }
       if (selectionType !== undefined) {
         setGameConfig(prev => ({ ...prev, selectionType: selectionType as any }));
+      }
+      if (mode !== undefined) {
+        setGameConfig(prev => ({ ...prev, mode: mode as any }));
       }
       setVotes([]);
       setCurrentScreen('gameplay');

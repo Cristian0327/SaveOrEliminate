@@ -87,7 +87,8 @@ io.on('connection', (socket) => {
           totalRounds: room?.totalRounds,
           currentYear,
           currentDecade,
-          selectionType: config.selectionType
+          selectionType: config.selectionType,
+          mode: config.mode
         });
         console.log(`Game started in room ${roomId}, round 1/${room?.totalRounds}`);
       } else {
@@ -138,7 +139,8 @@ io.on('connection', (socket) => {
         totalRounds: room?.totalRounds,
         currentYear,
         currentDecade,
-        selectionType: room?.gameConfig?.selectionType
+        selectionType: room?.gameConfig?.selectionType,
+        mode: room?.gameConfig?.mode
       });
       console.log(`New round in room ${roomId}: ${round.roundNumber}/${room?.totalRounds}`);
     } else {
