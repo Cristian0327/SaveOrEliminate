@@ -163,18 +163,6 @@ export default function GamePlay({ round, totalRounds, roomId, gameMode, onTimer
     socket.emit('start-timer', { roomId });
   };
 
-  const handleSelectNothing = () => {
-    // Registrar voto como "NINGUNA"
-    setSelectedSong('NONE');
-    socket.emit('submit-vote', { roomId, songId: 'NONE' });
-  };
-
-  const handleSelectAny = () => {
-    // Seleccionar aleatoriamente una canción
-    const randomSong = round.songs[Math.floor(Math.random() * round.songs.length)];
-    handleSongSelect(randomSong.id);
-  };
-
   return (
     <>
       <Header showBackButton={false} showVolume={true} />
@@ -260,23 +248,6 @@ export default function GamePlay({ round, totalRounds, roomId, gameMode, onTimer
                 style={{ fontSize: '1.1rem', padding: '15px 30px' }}
               >
                 VOTAR
-              </button>
-            </div>
-          )}
-
-          {votingStarted && previewsPlayed && (
-            <div style={{ textAlign: 'center', marginBottom: '30px' }}>
-              <button 
-                onClick={handleSelectNothing}
-                style={{ fontSize: '1rem', padding: '10px 20px', marginRight: '10px' }}
-              >
-                NINGUNA
-              </button>
-              <button 
-                onClick={handleSelectAny}
-                style={{ fontSize: '1rem', padding: '10px 20px' }}
-              >
-                CUALQUIERA
               </button>
             </div>
           )}
