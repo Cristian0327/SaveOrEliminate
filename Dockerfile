@@ -2,21 +2,15 @@ FROM node:18-alpine
 
 WORKDIR /app
 
-# Copy package files
-COPY server/package*.json ./
+COPY server/package*.json /app/
 
-# Install dependencies
-RUN npm install
+RUN npm ci
 
-# Copy source code
-COPY server/src ./src
-COPY server/tsconfig.json ./
+COPY server/src /app/src
+COPY server/tsconfig.json /app/
 
-# Build TypeScript
 RUN npm run build
 
-# Expose port
 EXPOSE 3001
 
-# Start server
 CMD ["npm", "start"]

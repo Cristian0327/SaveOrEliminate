@@ -1,12 +1,11 @@
 services:
-  - type: web
-    name: save-or-eliminate-api
-    env: docker
-    dockerfilePath: ./Dockerfile
-    plan: free
-    region: oregon
-    envVars:
-      - key: NODE_ENV
-        value: production
-      - key: PORT
-        value: 3001
+- type: web
+  name: save-or-eliminate-api
+  env: docker
+  region: oregon
+  plan: free
+  envVars:
+  - key: NODE_ENV
+    value: production
+  - key: PORT
+    value: 3001
