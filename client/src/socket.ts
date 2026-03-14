@@ -10,7 +10,7 @@ const getServerUrl = () => {
   if (isProduction) {
     // En producción, usa la variable de entorno VITE_API_URL
     // Si no está configurada, intenta usar el mismo dominio
-    return import.meta.env.VITE_API_URL || window.location.origin;
+    return (import.meta as any).env.VITE_API_URL || window.location.origin;
   }
   
   return 'http://localhost:3001';
