@@ -43,11 +43,12 @@ body {
   margin: 0 auto;
   overflow-y: auto;
   overflow-x: hidden;
-  padding-right: 8px;
+  scrollbar-width: thin;
+  scrollbar-color: transparent transparent;
 }
 
 #root::-webkit-scrollbar {
-  width: 4px;
+  width: 2px;
 }
 
 #root::-webkit-scrollbar-track {
@@ -55,11 +56,11 @@ body {
 }
 
 #root::-webkit-scrollbar-thumb {
-  background: rgba(128, 22, 199, 0.3);
+  background: transparent;
   border-radius: 4px;
 }
 
-#root::-webkit-scrollbar-thumb:hover {
+#root:hover::-webkit-scrollbar-thumb {
   background: rgba(128, 22, 199, 0.5);
 }
 
