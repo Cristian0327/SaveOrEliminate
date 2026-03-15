@@ -41,7 +41,14 @@ body {
   max-width: 1200px;
   max-height: calc(100vh - 80px);
   margin: 0 auto;
-  overflow: hidden;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+@media (min-width: 1024px) {
+  #root {
+    overflow: hidden;
+  }
 }
 
 .screen-container {
