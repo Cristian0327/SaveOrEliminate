@@ -43,11 +43,11 @@ export default function VoteResults({ round, votes, players, isHost, onNextRound
           background: 'linear-gradient(135deg, #6c63ff, #ff6584)',
           color: '#fff',
           borderRadius: '30px',
-          padding: '8px 24px',
-          fontSize: '1.4rem',
+          padding: 'clamp(0.4rem, 1vw, 0.8rem) clamp(1rem, 2vw, 1.5rem)',
+          fontSize: 'clamp(0.9rem, 2.5vw, 1.1rem)',
           fontWeight: 700,
           letterSpacing: '2px',
-          marginBottom: '2rem',
+          marginBottom: 'clamp(1rem, 2vw, 1.5rem)',
           boxShadow: '0 4px 16px rgba(108,99,255,0.3)',
         }}>
           📅 {round.yearLabel}
@@ -56,23 +56,23 @@ export default function VoteResults({ round, votes, players, isHost, onNextRound
 
       <div className="vote-summary">
         {songsWithVotes.length > 0 ? (
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem', width: '100%' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 'clamp(0.8rem, 1.5vw, 1.2rem)', width: '100%' }}>
             {songsWithVotes.map((item: any) => {
               const count = item.voters.length;
               const percentage = votes.length > 0 ? (count / votes.length) * 100 : 0;
               return (
                 <div key={item.song.id} style={{
                   display: 'grid',
-                  gridTemplateColumns: 'clamp(100px, 20vw, 150px) 1fr',
-                  gap: '1.5rem',
+                  gridTemplateColumns: 'clamp(80px, 18vw, 130px) 1fr',
+                  gap: 'clamp(0.8rem, 1.5vw, 1.2rem)',
                   alignItems: 'center',
                   background: 'rgba(255, 255, 255, 0.05)',
                   border: '1px solid rgba(255, 255, 255, 0.1)',
                   borderRadius: '12px',
-                  padding: 'clamp(1rem, 2vw, 1.5rem)',
+                  padding: 'clamp(0.8rem, 1.5vw, 1.2rem)',
                 }}>
                   {/* LEFT: Imagen + Votantes */}
-                  <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.8rem' }}>
+                  <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 'clamp(0.4rem, 0.8vw, 0.6rem)' }}>
                     <img 
                       src={item.song.albumArt} 
                       alt={item.song.name}
@@ -85,23 +85,23 @@ export default function VoteResults({ round, votes, players, isHost, onNextRound
                       }}
                     />
                     <div style={{ textAlign: 'center', width: '100%' }}>
-                      <div style={{ fontWeight: 600, fontSize: 'clamp(0.8rem, 2vw, 0.95rem)', marginBottom: '0.2rem', wordBreak: 'break-word' }}>
+                      <div style={{ fontWeight: 600, fontSize: 'clamp(0.65rem, 1.8vw, 0.8rem)', marginBottom: '0.1rem', wordBreak: 'break-word' }}>
                         {item.song.name}
                       </div>
-                      <div style={{ fontSize: 'clamp(0.7rem, 1.8vw, 0.85rem)', opacity: 0.7 }}>
+                      <div style={{ fontSize: 'clamp(0.6rem, 1.5vw, 0.75rem)', opacity: 0.7 }}>
                         {item.song.artist}
                       </div>
-                      <div style={{ fontSize: 'clamp(0.65rem, 1.5vw, 0.75rem)', color: 'rgba(251, 244, 254, 0.8)', marginTop: '0.5rem', lineHeight: '1.3' }}>
+                      <div style={{ fontSize: 'clamp(0.55rem, 1.3vw, 0.65rem)', color: 'rgba(251, 244, 254, 0.8)', marginTop: '0.3rem', lineHeight: '1.2' }}>
                         <strong>Votaron:</strong> {item.voters.join(', ')}
                       </div>
                     </div>
                   </div>
 
                   {/* RIGHT: Barra horizontal ancha */}
-                  <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', gap: '0.5rem' }}>
+                  <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', gap: 'clamp(0.3rem, 0.5vw, 0.4rem)' }}>
                     <div style={{
                       width: '100%',
-                      height: 'clamp(30px, 5vw, 50px)',
+                      height: 'clamp(20px, 3vw, 40px)',
                       background: 'rgba(255, 255, 255, 0.1)',
                       borderRadius: '8px',
                       overflow: 'hidden',
@@ -115,7 +115,7 @@ export default function VoteResults({ round, votes, players, isHost, onNextRound
                         boxShadow: '0 0 15px rgba(128, 22, 199, 0.6)'
                       }} />
                     </div>
-                    <div style={{ fontSize: 'clamp(0.9rem, 2vw, 1.1rem)', fontWeight: 'bold', color: 'var(--color-principal)', textAlign: 'right' }}>
+                    <div style={{ fontSize: 'clamp(0.7rem, 1.8vw, 0.9rem)', fontWeight: 'bold', color: 'var(--color-principal)', textAlign: 'right' }}>
                       {count} votos ({Math.round(percentage)}%)
                     </div>
                   </div>
@@ -124,22 +124,22 @@ export default function VoteResults({ round, votes, players, isHost, onNextRound
             })}
           </div>
         ) : (
-          <p style={{ textAlign: 'center', opacity: 0.7, width: '100%' }}>
+          <p style={{ textAlign: 'center', opacity: 0.7, width: '100%', fontSize: 'clamp(0.8rem, 2vw, 1rem)' }}>
             Nadie votó en esta ronda
           </p>
         )}
       </div>
 
       {isHost && (
-        <div style={{ marginTop: '3rem', width: '100%', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.5rem' }}>
-          <button className="primary" onClick={onNextRound} style={{ fontSize: '1.1rem', padding: '1.2rem', fontWeight: 'bold' }}>
+        <div style={{ marginTop: 'clamp(1.5rem, 2vw, 2rem)', width: '100%', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 'clamp(0.8rem, 1.5vw, 1.2rem)' }}>
+          <button className="primary" onClick={onNextRound} style={{ fontSize: 'clamp(0.8rem, 2.5vw, 1rem)', padding: 'clamp(0.8rem, 1.5vw, 1rem)', fontWeight: 'bold' }}>
             Siguiente Ronda
           </button>
           {onEndGame && (
             <button 
               className="eliminate" 
               onClick={onEndGame} 
-              style={{ fontSize: '1.1rem', padding: '1.2rem', fontWeight: 'bold' }}
+              style={{ fontSize: 'clamp(0.8rem, 2.5vw, 1rem)', padding: 'clamp(0.8rem, 1.5vw, 1rem)', fontWeight: 'bold' }}
             >
               Acabar Partida
             </button>
