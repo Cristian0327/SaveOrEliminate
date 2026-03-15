@@ -178,10 +178,10 @@ export default function GamePlay({ round, totalRounds, roomId, gameMode, onTimer
       <Header showBackButton={false} showVolume={true} />
       <audio ref={audioRef} style={{ display: 'none' }} />
 
-      <h1 style={{ marginTop: '0.3rem', marginBottom: '0.2rem', fontSize: 'clamp(1rem, 4vw, 1.5rem)' }}>
+      <h1 style={{ marginTop: 'clamp(-0.5rem, -2vw, 0rem)', marginBottom: 'clamp(0.1rem, 1vw, 0.3rem)', fontSize: 'clamp(1rem, 3.5vw, 1.3rem)' }}>
         RONDA {round.roundNumber}/{totalRounds}
       </h1>
-      <h2 style={{ fontSize: 'clamp(1.2rem, 5vw, 1.8rem)', marginBottom: '0.5rem', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem' }}>
+      <h2 style={{ fontSize: 'clamp(1.1rem, 4vw, 1.6rem)', marginBottom: 'clamp(0.4rem, 2vw, 0.8rem)', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.3rem' }}>
         {gameMode === 'save' ? '💚 SALVA UNA CANCIÓN' : '❌ ELIMINA UNA CANCIÓN'}
       </h2>
 
@@ -210,8 +210,8 @@ export default function GamePlay({ round, totalRounds, roomId, gameMode, onTimer
             src={round.songs[currentPreviewIndex].albumArt} 
             alt={round.songs[currentPreviewIndex].name}
             style={{
-              width: 'clamp(200px, 60vw, 350px)',
-              height: 'clamp(200px, 60vw, 350px)',
+              width: 'clamp(220px, 70vw, 420px)',
+              height: 'clamp(220px, 70vw, 420px)',
               borderRadius: '16px',
               objectFit: 'cover',
               margin: '0 auto 0.8rem',
@@ -251,30 +251,13 @@ export default function GamePlay({ round, totalRounds, roomId, gameMode, onTimer
           )}
 
           {!votingStarted && previewsPlayed && (
-            <div style={{ textAlign: 'center', marginBottom: '1rem' }}>
+            <div style={{ textAlign: 'center', marginBottom: 'clamp(1.5rem, 3vw, 2rem)' }}>
               <button 
                 className="primary"
                 onClick={handleStartVoting}
-                style={{ fontSize: 'clamp(0.9rem, 3vw, 1rem)', padding: 'clamp(0.7rem, 2vw, 1rem) clamp(1.5rem, 4vw, 2rem)' }}
+                style={{ fontSize: 'clamp(0.9rem, 3vw, 1.1rem)', padding: 'clamp(0.8rem, 2.5vw, 1.2rem) clamp(2rem, 6vw, 3rem)', width: 'clamp(200px, 70vw, 350px)' }}
               >
                 VOTAR
-              </button>
-            </div>
-          )}
-
-          {votingStarted && previewsPlayed && (
-            <div style={{ textAlign: 'center', marginBottom: '0.8rem', display: 'flex', gap: '0.5rem', justifyContent: 'center', flexWrap: 'wrap' }}>
-              <button 
-                onClick={handleSelectNothing}
-                style={{ fontSize: 'clamp(0.75rem, 2.5vw, 0.85rem)', padding: 'clamp(0.5rem, 1.5vw, 0.7rem) clamp(0.8rem, 2vw, 1rem)' }}
-              >
-                NINGUNA
-              </button>
-              <button 
-                onClick={handleSelectAny}
-                style={{ fontSize: 'clamp(0.75rem, 2.5vw, 0.85rem)', padding: 'clamp(0.5rem, 1.5vw, 0.7rem) clamp(0.8rem, 2vw, 1rem)' }}
-              >
-                CUALQUIERA
               </button>
             </div>
           )}

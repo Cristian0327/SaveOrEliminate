@@ -56,70 +56,68 @@ export default function VoteResults({ round, votes, players, isHost, onNextRound
 
       <div className="vote-summary">
         {songsWithVotes.length > 0 ? (
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '2rem', width: '100%' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem', width: '100%' }}>
             {songsWithVotes.map((item: any) => {
               const count = item.voters.length;
               const percentage = votes.length > 0 ? (count / votes.length) * 100 : 0;
               return (
                 <div key={item.song.id} style={{
-                  display: 'flex',
-                  flexDirection: 'column',
+                  display: 'grid',
+                  gridTemplateColumns: 'clamp(100px, 20vw, 150px) 1fr',
+                  gap: '1.5rem',
                   alignItems: 'center',
-                  gap: '1rem',
                   background: 'rgba(255, 255, 255, 0.05)',
                   border: '1px solid rgba(255, 255, 255, 0.1)',
-                  borderRadius: '16px',
-                  padding: '1.5rem',
+                  borderRadius: '12px',
+                  padding: 'clamp(1rem, 2vw, 1.5rem)',
                 }}>
-                  {/* Imagen de la canción */}
-                  <img 
-                    src={item.song.albumArt} 
-                    alt={item.song.name}
-                    style={{
-                      width: '150px',
-                      height: '150px',
-                      borderRadius: '12px',
-                      objectFit: 'cover',
-                      boxShadow: '0 10px 30px rgba(0,0,0,0.3)'
-                    }}
-                  />
-                  
-                  {/* Nombre y artista */}
-                  <div style={{ textAlign: 'center' }}>
-                    <div style={{ fontWeight: 600, fontSize: '1rem', marginBottom: '0.3rem' }}>
-                      {item.song.name}
-                    </div>
-                    <div style={{ fontSize: '0.9rem', opacity: 0.7 }}>
-                      {item.song.artist}
+                  {/* LEFT: Imagen + Votantes */}
+                  <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.8rem' }}>
+                    <img 
+                      src={item.song.albumArt} 
+                      alt={item.song.name}
+                      style={{
+                        width: '100%',
+                        aspectRatio: '1',
+                        borderRadius: '8px',
+                        objectFit: 'cover',
+                        boxShadow: '0 10px 30px rgba(0,0,0,0.3)'
+                      }}
+                    />
+                    <div style={{ textAlign: 'center', width: '100%' }}>
+                      <div style={{ fontWeight: 600, fontSize: 'clamp(0.8rem, 2vw, 0.95rem)', marginBottom: '0.2rem', wordBreak: 'break-word' }}>
+                        {item.song.name}
+                      </div>
+                      <div style={{ fontSize: 'clamp(0.7rem, 1.8vw, 0.85rem)', opacity: 0.7 }}>
+                        {item.song.artist}
+                      </div>
+                      <div style={{ fontSize: 'clamp(0.65rem, 1.5vw, 0.75rem)', color: 'rgba(251, 244, 254, 0.8)', marginTop: '0.5rem', lineHeight: '1.3' }}>
+                        <strong>Votaron:</strong> {item.voters.join(', ')}
+                      </div>
                     </div>
                   </div>
-                  
-                  {/* Barra de progreso */}
-                  <div style={{
-                    width: '100%',
-                    height: '12px',
-                    background: 'rgba(255, 255, 255, 0.1)',
-                    borderRadius: '6px',
-                    overflow: 'hidden',
-                    marginTop: '0.5rem'
-                  }}>
+
+                  {/* RIGHT: Barra horizontal ancha */}
+                  <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', gap: '0.5rem' }}>
                     <div style={{
-                      width: `${percentage}%`,
-                      height: '100%',
-                      background: 'linear-gradient(90deg, var(--color-principal), var(--color-save))',
-                      transition: 'width 0.3s ease',
-                      boxShadow: '0 0 15px rgba(128, 22, 199, 0.5)'
-                    }} />
-                  </div>
-                  
-                  {/* Número de votos */}
-                  <div style={{ fontSize: '1.2rem', fontWeight: 'bold', color: 'var(--color-principal)' }}>
-                    {count} {count === 1 ? 'voto' : 'votos'} ({Math.round(percentage)}%)
-                  </div>
-                  
-                  {/* Nombres de quien votó */}
-                  <div style={{ fontSize: '0.85rem', color: 'rgba(251, 244, 254, 0.8)', textAlign: 'center', lineHeight: '1.4' }}>
-                    {item.voters.join(', ')}
+                      width: '100%',
+                      height: 'clamp(30px, 5vw, 50px)',
+                      background: 'rgba(255, 255, 255, 0.1)',
+                      borderRadius: '8px',
+                      overflow: 'hidden',
+                      border: '1px solid rgba(255, 255, 255, 0.2)'
+                    }}>
+                      <div style={{
+                        width: `${percentage}%`,
+                        height: '100%',
+                        background: 'linear-gradient(90deg, var(--color-principal), var(--color-save))',
+                        transition: 'width 0.3s ease',
+                        boxShadow: '0 0 15px rgba(128, 22, 199, 0.6)'
+                      }} />
+                    </div>
+                    <div style={{ fontSize: 'clamp(0.9rem, 2vw, 1.1rem)', fontWeight: 'bold', color: 'var(--color-principal)', textAlign: 'right' }}>
+                      {count} votos ({Math.round(percentage)}%)
+                    </div>
                   </div>
                 </div>
               );
