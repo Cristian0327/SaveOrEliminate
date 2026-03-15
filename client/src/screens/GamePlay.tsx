@@ -226,7 +226,7 @@ export default function GamePlay({ round, totalRounds, roomId, gameMode, onTimer
       {!showingPreview && (
         <>
           {votingStarted && (
-            <div style={{ width: '100%', maxWidth: '600px', margin: '0.5rem auto', paddingX: '0.5rem' }}>
+            <div style={{ width: '100%', maxWidth: '600px', margin: '0.5rem auto', padding: '0 0.5rem' }}>
               <div style={{
                 width: '100%',
                 height: '12px',
