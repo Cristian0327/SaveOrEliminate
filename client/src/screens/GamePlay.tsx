@@ -50,7 +50,7 @@ function createSimpleAudio(audioElement: HTMLAudioElement) {
   };
 }
 
-export default function GamePlay({ round, totalRounds, roomId, gameMode, onTimerEnd, onBack }: GamePlayProps) {
+export default function GamePlay({ round, totalRounds, roomId, isHost, gameMode, onTimerEnd, onBack }: GamePlayProps) {
   const [selectedSong, setSelectedSong] = useState<string | null>(null);
   const [currentPreviewIndex, setCurrentPreviewIndex] = useState(-1);
   const [previewsPlayed, setPreviewsPlayed] = useState(round.roundNumber > 1); // Skip previews after first round

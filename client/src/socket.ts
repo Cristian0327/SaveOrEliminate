@@ -20,7 +20,6 @@ export const socket: Socket = io(getServerUrl(), {
   autoConnect: true,
   reconnection: true,
   reconnectionDelay: 1000,
-  reconnectionDelayMax: 5000,
-  reconnectionAttempts: Infinity,
-  reconnectionDelayMax: 10000
+  reconnectionDelayMax: 10000,
+  reconnectionAttempts: Infinity
 });
