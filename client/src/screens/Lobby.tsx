@@ -24,8 +24,8 @@ export default function Lobby({ room, isHost, onStartGame, onBack }: LobbyProps)
     <div className="screen-container">
       <Header onBack={onBack} showBackButton={!!onBack} />
       
-      <div style={{ width: '100%', marginBottom: '2rem' }}>
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: 'clamp(1.2rem, 2vw, 2rem)' }}>
+      <div style={{ width: '100%', marginBottom: 'clamp(0.6rem, 0.8vw, 0.8rem)' }}>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: 'clamp(0.8rem, 1.2vw, 1rem)' }}>
           <h2 style={{ fontSize: 'clamp(1.5rem, 4vw, 2rem)', margin: 0, display: 'flex', alignItems: 'center', gap: 'clamp(10px, 2vw, 15px)' }}>
             <Users size={28} color="var(--color-principal)" /> JUGADORES <span style={{ opacity: 0.5, fontSize: 'clamp(1.2rem, 3vw, 1.5rem)' }}>({room.players.length})</span>
           </h2>
@@ -35,9 +35,9 @@ export default function Lobby({ room, isHost, onStartGame, onBack }: LobbyProps)
           display: 'grid', 
           gridTemplateColumns: 'repeat(auto-fit, minmax(130px, 1fr))', 
           gap: '1rem',
-          marginBottom: '3rem',
+          marginBottom: 'clamp(0.8rem, 1.2vw, 1rem)',
           maxWidth: '900px',
-          margin: '0 auto 3rem'
+          margin: '0 auto clamp(0.8rem, 1.2vw, 1rem)'
         }}>
           {room.players.map((player) => (
             <div key={player.id} style={{
@@ -77,7 +77,7 @@ export default function Lobby({ room, isHost, onStartGame, onBack }: LobbyProps)
         </div>
       </div>
 
-      <div className="card" style={{ alignItems: 'center', textAlign: 'center', marginBottom: 'clamp(2rem, 3vw, 3rem)', background: 'transparent', border: 'none', boxShadow: 'none' }}>
+      <div className="card" style={{ alignItems: 'center', textAlign: 'center', marginBottom: 'clamp(1rem, 1.5vw, 1.5rem)', background: 'transparent', border: 'none', boxShadow: 'none' }}>
         <p className="text-small" style={{ marginBottom: 'clamp(0.3rem, 1vw, 0.5rem)', fontSize: 'clamp(0.7rem, 1.5vw, 0.9rem)', opacity: 0.7 }}>SALA DE JUEGO</p>
         <h1 style={{ marginBottom: 'clamp(1rem, 2vw, 1.5rem)', fontSize: 'clamp(1.8rem, 5vw, 2.5rem)', letterSpacing: 'clamp(4px, 1vw, 6px)' }}>
           {room.id}
@@ -92,7 +92,7 @@ export default function Lobby({ room, isHost, onStartGame, onBack }: LobbyProps)
         </button>
       </div>
 
-      <div style={{ marginTop: 'clamp(2rem, 2.5vw, 3rem)' }}>
+      <div style={{ marginTop: 'clamp(0.8rem, 1vw, 1.2rem)' }}>
         {isHost ? (
           <button
             className="primary"
