@@ -49,8 +49,9 @@ body {
   padding: 15px;
   overflow-y: auto;
   overflow-x: hidden;
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-rows: auto 1fr;
+  gap: 0;
   
   /* Hide scrollbar but keep scrolling functional */
   scrollbar-width: none;
