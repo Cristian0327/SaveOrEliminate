@@ -1,6 +1,7 @@
 import type { Room } from '../types';
 import Header from '../components/Header';
 import { Users, Copy, Crown, Play, Loader } from 'lucide-react';
+import React from 'react';
 
 interface LobbyProps {
   room: Room;
@@ -10,11 +11,13 @@ interface LobbyProps {
 }
 
 export default function Lobby({ room, isHost, onStartGame, onBack }: LobbyProps) {
+  const [copied, setCopied] = React.useState(false);
+
   const copyRoomLink = () => {
     const link = `${window.location.origin}?room=${room.id}`;
     navigator.clipboard.writeText(link);
-    // Could add toast here, simple alert for now
-    alert('¡Link copiado al portapapeles!');
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
   };
 
   return (
@@ -30,16 +33,18 @@ export default function Lobby({ room, isHost, onStartGame, onBack }: LobbyProps)
 
         <div className="players-grid" style={{ 
           display: 'grid', 
-          gridTemplateColumns: 'repeat(auto-fill, minmax(160px, 1fr))', 
-          gap: '1.5rem',
-          marginBottom: '5rem'
+          gridTemplateColumns: 'repeat(auto-fit, minmax(130px, 1fr))', 
+          gap: '1rem',
+          marginBottom: '3rem',
+          maxWidth: '900px',
+          margin: '0 auto 3rem'
         }}>
           {room.players.map((player) => (
             <div key={player.id} style={{
               background: 'rgba(255,255,255,0.05)',
               border: player.isHost ? '2px solid var(--color-principal)' : '1px solid rgba(255,255,255,0.1)',
               borderRadius: '16px',
-              padding: '1.5rem',
+              padding: '1rem',
               display: 'flex',
               flexDirection: 'column',
               alignItems: 'center',
@@ -81,9 +86,9 @@ export default function Lobby({ room, isHost, onStartGame, onBack }: LobbyProps)
         <button 
           onClick={copyRoomLink} 
           className="secondary" 
-          style={{ width: 'auto', padding: '0.8rem 1.5rem', fontSize: '0.9rem' }}
+          style={{ width: 'auto', padding: '0.8rem 1.5rem', fontSize: '0.9rem', background: copied ? 'rgba(139, 255, 98, 0.2)' : 'transparent', transition: 'all 0.3s' }}
         >
-          <Copy size={16} /> Copiar Enlace
+          <Copy size={16} /> {copied ? '¡Copiado!' : 'Copiar Enlace'}
         </button>
       </div>
 

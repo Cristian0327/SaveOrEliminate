@@ -43,6 +43,7 @@ function App() {
   const [totalRounds, setTotalRounds] = useState(0);
   const [votes, setVotes] = useState<Vote[]>([]);
   const [loadingProgress, setLoadingProgress] = useState<{ loaded: number; total: number } | null>(null);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const isStartingGameRef = useRef(false);
 
   const navigateTo = (screen: Screen) => {
@@ -100,7 +101,7 @@ function App() {
       isStartingGameRef.current = false;
       setLoadingProgress(null);
       setCurrentScreen('lobby');
-      alert(message);
+      setErrorMessage(message);
     });
 
     socket.on('timer-started', () => {
@@ -148,7 +149,7 @@ function App() {
     });
 
     socket.on('error', ({ message }: { message: string }) => {
-      alert(message);
+      setErrorMessage(message);
     });
 
     return () => {
@@ -345,6 +346,42 @@ function App() {
   return (
     <div className="container">
       {renderScreen()}
+      
+      {errorMessage && (
+        <div style={{
+          position: 'fixed',
+          top: '50%',
+          left: '50%',
+          transform: 'translate(-50%, -50%)',
+          background: 'rgba(30, 25, 33, 0.98)',
+          border: '2px solid #FA5649',
+          borderRadius: '16px',
+          padding: '2rem',
+          maxWidth: '90%',
+          zIndex: 9999,
+          backdropFilter: 'blur(5px)',
+          boxShadow: '0 20px 60px rgba(0,0,0,0.8), 0 0 30px rgba(250, 86, 73, 0.3)'
+        }}>
+          <h3 style={{ color: '#FA5649', marginBottom: '1rem', marginTop: 0, fontSize: '1.3rem' }}>Error</h3>
+          <p style={{ color: '#FBF4FE', marginBottom: '1.5rem', fontSize: '0.95rem', lineHeight: '1.4' }}>{errorMessage}</p>
+          <button 
+            onClick={() => setErrorMessage(null)}
+            style={{
+              background: '#FA5649',
+              color: 'white',
+              border: 'none',
+              padding: '0.8rem 1.5rem',
+              borderRadius: '8px',
+              cursor: 'pointer',
+              fontSize: '0.95rem',
+              fontWeight: 'bold',
+              width: '100%'
+            }}
+          >
+            Aceptar
+          </button>
+        </div>
+      )}
     </div>
   );
 }

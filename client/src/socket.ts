@@ -21,5 +21,6 @@ export const socket: Socket = io(getServerUrl(), {
   reconnection: true,
   reconnectionDelay: 1000,
   reconnectionDelayMax: 5000,
-  reconnectionAttempts: 5
+  reconnectionAttempts: Infinity,
+  reconnectionDelayMax: 10000
 });

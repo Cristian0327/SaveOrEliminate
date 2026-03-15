@@ -53,9 +53,9 @@ function createSimpleAudio(audioElement: HTMLAudioElement) {
 export default function GamePlay({ round, totalRounds, roomId, gameMode, onTimerEnd, onBack }: GamePlayProps) {
   const [selectedSong, setSelectedSong] = useState<string | null>(null);
   const [currentPreviewIndex, setCurrentPreviewIndex] = useState(-1);
-  const [previewsPlayed, setPreviewsPlayed] = useState(false);
+  const [previewsPlayed, setPreviewsPlayed] = useState(round.roundNumber > 1); // Skip previews after first round
   const [timer, setTimer] = useState(10);
-  const [showingPreview, setShowingPreview] = useState(true);
+  const [showingPreview, setShowingPreview] = useState(round.roundNumber === 1);
   const [votingStarted, setVotingStarted] = useState(false);
   const [voteCounts, setVoteCounts] = useState<Record<string, number>>({});
   const [playingPreviewId, setPlayingPreviewId] = useState<string | null>(null);
@@ -169,10 +169,10 @@ export default function GamePlay({ round, totalRounds, roomId, gameMode, onTimer
       <Header showBackButton={true} showVolume={true} onBack={onBack} />
       <audio ref={audioRef} style={{ display: 'none' }} />
 
-      <h1 style={{ marginTop: 'clamp(-0.5rem, -2vw, 0rem)', marginBottom: 'clamp(0.05rem, 0.5vw, 0.2rem)', fontSize: 'clamp(0.85rem, 3vw, 1.3rem)' }}>
+      <h1 style={{ marginTop: 'clamp(-0.5rem, -2vw, 0rem)', marginBottom: 'clamp(0.2rem, 1vw, 0.4rem)', fontSize: 'clamp(1.2rem, 5vw, 2rem)' }}>
         RONDA {round.roundNumber}/{totalRounds}
       </h1>
-      <h2 style={{ fontSize: 'clamp(0.9rem, 3vw, 1.4rem)', marginBottom: 'clamp(0.2rem, 1vw, 0.5rem)', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.2rem' }}>
+      <h2 style={{ fontSize: 'clamp(1rem, 3.5vw, 1.5rem)', marginBottom: 'clamp(0.3rem, 1.2vw, 0.7rem)', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.2rem' }}>
         {gameMode === 'save' ? '💚 SALVA UNA CANCIÓN' : '❌ ELIMINA UNA CANCIÓN'}
       </h2>
 
@@ -243,13 +243,19 @@ export default function GamePlay({ round, totalRounds, roomId, gameMode, onTimer
 
           {!votingStarted && previewsPlayed && (
             <div style={{ textAlign: 'center', marginBottom: 'clamp(0.8rem, 1.5vw, 1.5rem)' }}>
-              <button 
-                className="primary"
-                onClick={handleStartVoting}
-                style={{ fontSize: 'clamp(0.8rem, 2.5vw, 1rem)', padding: 'clamp(0.6rem, 1.5vw, 1rem) clamp(1.5rem, 4vw, 2.5rem)', width: 'clamp(160px, 60vw, 300px)' }}
-              >
-                VOTAR
-              </button>
+              {isHost ? (
+                <button 
+                  className="primary"
+                  onClick={handleStartVoting}
+                  style={{ fontSize: 'clamp(0.8rem, 2.5vw, 1rem)', padding: 'clamp(0.6rem, 1.5vw, 1rem) clamp(1.5rem, 4vw, 2.5rem)', width: 'clamp(160px, 60vw, 300px)' }}
+                >
+                  VOTAR
+                </button>
+              ) : (
+                <div style={{ fontSize: 'clamp(0.75rem, 2vw, 0.95rem)', opacity: 0.7, textAlign: 'center' }}>
+                  Esperando a que el host inicie la votación...
+                </div>
+              )}
             </div>
           )}
 
@@ -263,9 +269,9 @@ export default function GamePlay({ round, totalRounds, roomId, gameMode, onTimer
                 <div
                   key={song.id}
                   className={`song-card ${isSelected ? 'selected' : ''}`}
-                  onClick={() => votingStarted && previewsPlayed ? handleSongSelect(song.id) : null}
+                  onClick={() => votingStarted && previewsPlayed && isHost ? handleSongSelect(song.id) : null}
                   onMouseEnter={(e) => {
-                    if (votingStarted && previewsPlayed) {
+                    if (votingStarted && previewsPlayed && isHost) {
                       const target = e.currentTarget as HTMLElement;
                       const imgElement = target.querySelector('img') as HTMLImageElement;
                       if (imgElement) {
@@ -285,7 +291,7 @@ export default function GamePlay({ round, totalRounds, roomId, gameMode, onTimer
                     target.style.transform = isSelected ? 'scale(1.05)' : 'translateY(0)';
                   }}
                   style={{ 
-                    cursor: votingStarted && previewsPlayed ? 'pointer' : 'default', 
+                    cursor: votingStarted && previewsPlayed && isHost ? 'pointer' : 'default', 
                     opacity: previewsPlayed ? 1 : 0.7,
                     position: 'relative',
                   }}
@@ -325,7 +331,7 @@ export default function GamePlay({ round, totalRounds, roomId, gameMode, onTimer
                   <h3 style={{ fontSize: 'clamp(0.85rem, 3vw, 1.1rem)', textAlign: 'center', marginTop: 'clamp(0.5rem, 2vw, 0.8rem)' }}>{song.name}</h3>
                   <p style={{ fontSize: 'clamp(0.75rem, 2.5vw, 0.95rem)', margin: 0, opacity: 0.8, textAlign: 'center' }}>{song.artist}</p>
                   
-                  {previewsPlayed && !votingStarted && (
+                  {previewsPlayed && !votingStarted && isHost && (
                     <button
                       onClick={(e) => {
                         e.stopPropagation();

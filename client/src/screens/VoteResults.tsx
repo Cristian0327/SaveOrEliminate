@@ -36,7 +36,7 @@ export default function VoteResults({ round, votes, players, isHost, onNextRound
   return (
     <>
       <Header showBackButton={false} />
-      <h1>Resultados - Ronda {round.roundNumber}</h1>
+      <h1 style={{ fontSize: 'clamp(1.5rem, 5vw, 2.5rem)', marginBottom: '0.5rem' }}>Resultados - Ronda {round.roundNumber}</h1>
       {round.yearLabel && (
         <div style={{
           display: 'inline-block',
@@ -54,25 +54,25 @@ export default function VoteResults({ round, votes, players, isHost, onNextRound
         </div>
       )}
 
-      <div className="vote-summary">
+      <div className="vote-summary" style={{ marginBottom: '1.5rem' }}>
         {songsWithVotes.length > 0 ? (
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 'clamp(0.8rem, 1.5vw, 1.2rem)', width: '100%' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 'clamp(0.6rem, 1vw, 0.9rem)', width: '100%' }}>
             {songsWithVotes.map((item: any) => {
               const count = item.voters.length;
               const percentage = votes.length > 0 ? (count / votes.length) * 100 : 0;
               return (
                 <div key={item.song.id} style={{
                   display: 'grid',
-                  gridTemplateColumns: 'clamp(80px, 18vw, 130px) 1fr',
-                  gap: 'clamp(0.8rem, 1.5vw, 1.2rem)',
+                  gridTemplateColumns: 'clamp(70px, 15vw, 100px) 1fr',
+                  gap: 'clamp(0.6rem, 1vw, 0.9rem)',
                   alignItems: 'center',
                   background: 'rgba(255, 255, 255, 0.05)',
                   border: '1px solid rgba(255, 255, 255, 0.1)',
                   borderRadius: '12px',
-                  padding: 'clamp(0.8rem, 1.5vw, 1.2rem)',
+                  padding: 'clamp(0.6rem, 1vw, 0.9rem)',
                 }}>
                   {/* LEFT: Imagen + Votantes */}
-                  <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 'clamp(0.4rem, 0.8vw, 0.6rem)' }}>
+                  <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 'clamp(0.3rem, 0.5vw, 0.5rem)' }}>
                     <img 
                       src={item.song.albumArt} 
                       alt={item.song.name}
@@ -85,13 +85,13 @@ export default function VoteResults({ round, votes, players, isHost, onNextRound
                       }}
                     />
                     <div style={{ textAlign: 'center', width: '100%' }}>
-                      <div style={{ fontWeight: 600, fontSize: 'clamp(0.65rem, 1.8vw, 0.8rem)', marginBottom: '0.1rem', wordBreak: 'break-word' }}>
+                      <div style={{ fontWeight: 600, fontSize: 'clamp(0.5rem, 1.3vw, 0.65rem)', marginBottom: '0.05rem', wordBreak: 'break-word' }}>
                         {item.song.name}
                       </div>
-                      <div style={{ fontSize: 'clamp(0.6rem, 1.5vw, 0.75rem)', opacity: 0.7 }}>
+                      <div style={{ fontSize: 'clamp(0.45rem, 1vw, 0.55rem)', opacity: 0.7 }}>
                         {item.song.artist}
                       </div>
-                      <div style={{ fontSize: 'clamp(0.55rem, 1.3vw, 0.65rem)', color: 'rgba(251, 244, 254, 0.8)', marginTop: '0.3rem', lineHeight: '1.2' }}>
+                      <div style={{ fontSize: 'clamp(0.4rem, 0.9vw, 0.5rem)', color: 'rgba(251, 244, 254, 0.8)', marginTop: '0.2rem', lineHeight: '1.1' }}>
                         <strong>Votaron:</strong> {item.voters.join(', ')}
                       </div>
                     </div>
@@ -131,15 +131,15 @@ export default function VoteResults({ round, votes, players, isHost, onNextRound
       </div>
 
       {isHost && (
-        <div style={{ marginTop: 'clamp(1.5rem, 2vw, 2rem)', width: '100%', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 'clamp(0.8rem, 1.5vw, 1.2rem)' }}>
-          <button className="primary" onClick={onNextRound} style={{ fontSize: 'clamp(0.8rem, 2.5vw, 1rem)', padding: 'clamp(0.8rem, 1.5vw, 1rem)', fontWeight: 'bold' }}>
+        <div style={{ marginTop: 'clamp(0.8rem, 1.2vw, 1rem)', width: '100%', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 'clamp(0.6rem, 1vw, 0.8rem)' }}>
+          <button className="primary" onClick={onNextRound} style={{ fontSize: 'clamp(0.7rem, 2vw, 0.85rem)', padding: 'clamp(0.6rem, 1vw, 0.8rem)', fontWeight: 'bold' }}>
             Siguiente Ronda
           </button>
           {onEndGame && (
             <button 
               className="eliminate" 
               onClick={onEndGame} 
-              style={{ fontSize: 'clamp(0.8rem, 2.5vw, 1rem)', padding: 'clamp(0.8rem, 1.5vw, 1rem)', fontWeight: 'bold' }}
+              style={{ fontSize: 'clamp(0.7rem, 2vw, 0.85rem)', padding: 'clamp(0.6rem, 1vw, 0.8rem)', fontWeight: 'bold' }}
             >
               Acabar Partida
             </button>
