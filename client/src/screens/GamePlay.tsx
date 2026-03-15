@@ -163,65 +163,75 @@ export default function GamePlay({ round, totalRounds, roomId, gameMode, onTimer
     socket.emit('start-timer', { roomId });
   };
 
+  const handleSelectNothing = () => {
+    setSelectedSong('NONE');
+    socket.emit('submit-vote', { roomId, songId: 'NONE' });
+  };
+
+  const handleSelectAny = () => {
+    const randomSong = round.songs[Math.floor(Math.random() * round.songs.length)];
+    handleSongSelect(randomSong.id);
+  };
+
   return (
     <>
       <Header showBackButton={false} showVolume={true} />
       <audio ref={audioRef} style={{ display: 'none' }} />
 
-      <h1 style={{ marginTop: '-1rem', marginBottom: '0.5rem' }}>
+      <h1 style={{ marginTop: '0.3rem', marginBottom: '0.2rem', fontSize: 'clamp(1rem, 4vw, 1.5rem)' }}>
         RONDA {round.roundNumber}/{totalRounds}
       </h1>
-      <h2 style={{ fontSize: '2rem', marginBottom: '1rem', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '1rem' }}>
+      <h2 style={{ fontSize: 'clamp(1.2rem, 5vw, 1.8rem)', marginBottom: '0.5rem', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem' }}>
         {gameMode === 'save' ? '💚 SALVA UNA CANCIÓN' : '❌ ELIMINA UNA CANCIÓN'}
       </h2>
 
       {currentPreviewIndex === -1 && (
-        <div style={{ textAlign: 'center', padding: '60px' }}>
-          <p style={{ fontSize: '1.3rem', marginBottom: '30px' }}>
+        <div style={{ textAlign: 'center', padding: 'clamp(2rem, 5vw, 4rem)' }}>
+          <p style={{ fontSize: 'clamp(1rem, 4vw, 1.1rem)', marginBottom: 'clamp(1rem, 3vw, 2rem)' }}>
             Escucharás <strong>{round.songs.length} canciones</strong> con previews de 10 segundos cada una
           </p>
           <button 
             className="primary" 
             onClick={() => setCurrentPreviewIndex(0)}
-            style={{ fontSize: '1.2rem', padding: '20px 40px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '1rem', margin: '0 auto' }}
+            style={{ fontSize: 'clamp(0.9rem, 3vw, 1rem)', padding: 'clamp(0.8rem, 2vw, 1.2rem) clamp(1.5rem, 4vw, 2rem)', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem', margin: '0 auto' }}
           >
-            <Music size={24} /> Comenzar Previews
+            <Music size={20} /> Comenzar Previews
           </button>
         </div>
       )}
 
       {showingPreview && currentPreviewIndex >= 0 && currentPreviewIndex < round.songs.length && (
-        <div style={{ textAlign: 'center', padding: '1rem' }}>
-          <div className="loading" style={{ marginBottom: '1.5rem', fontSize: '1.5rem', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '1rem' }}>
-            <Music size={28} /> Reproduciendo...
+        <div style={{ textAlign: 'center', padding: '0.5rem' }}>
+          <div className="loading" style={{ marginBottom: '0.8rem', fontSize: 'clamp(1rem, 4vw, 1.2rem)', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem' }}>
+            <Music size={24} /> Reproduciendo...
           </div>
           
           <img 
             src={round.songs[currentPreviewIndex].albumArt} 
             alt={round.songs[currentPreviewIndex].name}
             style={{
-              width: '420px',
-              height: '420px',
-              borderRadius: '24px',
+              width: 'clamp(200px, 60vw, 350px)',
+              height: 'clamp(200px, 60vw, 350px)',
+              borderRadius: '16px',
               objectFit: 'cover',
-              margin: '0 auto 1.5rem',
+              margin: '0 auto 0.8rem',
               boxShadow: '0 20px 60px rgba(128, 22, 199, 0.4)'
             }}
           />
-          <h3 style={{ fontSize: '1.8rem', textAlign: 'center', marginBottom: '0.5rem' }}>{round.songs[currentPreviewIndex].name}</h3>
-          <p style={{ fontSize: '1.2rem', opacity: 0.8, textAlign: 'center' }}>{round.songs[currentPreviewIndex].artist}</p>
+          <h3 style={{ fontSize: 'clamp(1rem, 4vw, 1.4rem)', textAlign: 'center', marginBottom: '0.2rem' }}>{round.songs[currentPreviewIndex].name}</h3>
+          <p style={{ fontSize: 'clamp(0.9rem, 3vw, 1rem)', opacity: 0.8, textAlign: 'center' }}>{round.songs[currentPreviewIndex].artist}</p>
         </div>
       )}
 
       {!showingPreview && (
         <>
           {votingStarted && (
-            <div style={{ width: '100%', maxWidth: '700px', margin: '1rem auto' }}>
+            <div style={{ width: '100%', maxWidth: '600px', margin: '0.5rem auto', paddingX: '0.5rem' }}>
               <div style={{
                 width: '100%',
-                height: '16px',
+                height: '12px',
                 background: 'rgba(255,255,255,0.1)',
-                borderRadius: '8px',
+                borderRadius: '6px',
                 overflow: 'hidden',
                 boxShadow: '0 0 15px rgba(0,0,0,0.3)'
               }}>
@@ -229,25 +239,42 @@ export default function GamePlay({ round, totalRounds, roomId, gameMode, onTimer
                   width: `${(timer / 10) * 100}%`,
                   height: '100%',
                   background: timer <= 3 ? 'var(--color-eliminate)' : 'var(--color-principal)',
-                  borderRadius: '8px',
+                  borderRadius: '6px',
                   transition: 'width 1s linear, background 0.3s ease',
                   boxShadow: timer <= 3 ? '0 0 20px var(--color-eliminate)' : '0 0 20px var(--color-principal)'
                 }} />
               </div>
-              <div style={{ textAlign: 'center', marginTop: '1rem', fontSize: '1.3rem', fontWeight: 'bold', color: 'var(--color-principal)' }}>
+              <div style={{ textAlign: 'center', marginTop: '0.5rem', fontSize: 'clamp(1rem, 4vw, 1.2rem)', fontWeight: 'bold', color: 'var(--color-principal)' }}>
                 {timer}s
               </div>
             </div>
           )}
 
           {!votingStarted && previewsPlayed && (
-            <div style={{ textAlign: 'center', marginBottom: '30px' }}>
+            <div style={{ textAlign: 'center', marginBottom: '1rem' }}>
               <button 
                 className="primary"
                 onClick={handleStartVoting}
-                style={{ fontSize: '1.1rem', padding: '15px 30px' }}
+                style={{ fontSize: 'clamp(0.9rem, 3vw, 1rem)', padding: 'clamp(0.7rem, 2vw, 1rem) clamp(1.5rem, 4vw, 2rem)' }}
               >
                 VOTAR
+              </button>
+            </div>
+          )}
+
+          {votingStarted && previewsPlayed && (
+            <div style={{ textAlign: 'center', marginBottom: '0.8rem', display: 'flex', gap: '0.5rem', justifyContent: 'center', flexWrap: 'wrap' }}>
+              <button 
+                onClick={handleSelectNothing}
+                style={{ fontSize: 'clamp(0.75rem, 2.5vw, 0.85rem)', padding: 'clamp(0.5rem, 1.5vw, 0.7rem) clamp(0.8rem, 2vw, 1rem)' }}
+              >
+                NINGUNA
+              </button>
+              <button 
+                onClick={handleSelectAny}
+                style={{ fontSize: 'clamp(0.75rem, 2.5vw, 0.85rem)', padding: 'clamp(0.5rem, 1.5vw, 0.7rem) clamp(0.8rem, 2vw, 1rem)' }}
+              >
+                CUALQUIERA
               </button>
             </div>
           )}
@@ -292,17 +319,17 @@ export default function GamePlay({ round, totalRounds, roomId, gameMode, onTimer
                   {votingStarted && voteCount > 0 && (
                     <div style={{
                       position: 'absolute',
-                      top: '15px',
-                      right: '15px',
+                      top: 'clamp(8px, 2vw, 12px)',
+                      right: 'clamp(8px, 2vw, 12px)',
                       backgroundColor: gameMode === 'eliminate' ? 'var(--color-eliminate)' : 'var(--color-save)',
                       color: 'white',
                       borderRadius: '50%',
-                      width: '45px',
-                      height: '45px',
+                      width: 'clamp(35px, 8vw, 45px)',
+                      height: 'clamp(35px, 8vw, 45px)',
                       display: 'flex',
                       alignItems: 'center',
                       justifyContent: 'center',
-                      fontSize: '1.3rem',
+                      fontSize: 'clamp(1rem, 3vw, 1.2rem)',
                       fontWeight: 'bold',
                       zIndex: 10,
                       boxShadow: gameMode === 'eliminate' 
@@ -321,8 +348,8 @@ export default function GamePlay({ round, totalRounds, roomId, gameMode, onTimer
                       transition: 'all 0.3s ease'
                     }}
                   />
-                  <h3 style={{ fontSize: '1.2rem', textAlign: 'center', marginTop: '1rem' }}>{song.name}</h3>
-                  <p style={{ fontSize: '1rem', margin: 0, opacity: 0.8, textAlign: 'center' }}>{song.artist}</p>
+                  <h3 style={{ fontSize: 'clamp(0.85rem, 3vw, 1.1rem)', textAlign: 'center', marginTop: 'clamp(0.5rem, 2vw, 0.8rem)' }}>{song.name}</h3>
+                  <p style={{ fontSize: 'clamp(0.75rem, 2.5vw, 0.95rem)', margin: 0, opacity: 0.8, textAlign: 'center' }}>{song.artist}</p>
                   
                   {previewsPlayed && !votingStarted && (
                     <button
@@ -331,14 +358,14 @@ export default function GamePlay({ round, totalRounds, roomId, gameMode, onTimer
                         handleReplayPreview(song);
                       }}
                       style={{
-                        marginTop: '0.8rem',
+                        marginTop: 'clamp(0.3rem, 1vw, 0.6rem)',
                         padding: '0',
                         backgroundColor: 'transparent',
                         color: playingPreviewId === song.id ? 'var(--color-eliminate)' : 'var(--color-principal)',
                         border: 'none',
                         borderRadius: '0',
                         cursor: 'pointer',
-                        fontSize: '1.4rem',
+                        fontSize: 'clamp(1rem, 3vw, 1.2rem)',
                         width: 'auto',
                         height: 'auto',
                         transition: 'all 0.3s',
