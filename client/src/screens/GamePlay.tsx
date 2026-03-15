@@ -168,48 +168,49 @@ export default function GamePlay({ round, totalRounds, roomId, gameMode, onTimer
       <Header showBackButton={false} showVolume={true} />
       <audio ref={audioRef} style={{ display: 'none' }} />
 
-      <h1 style={{ marginTop: '-0.5rem', marginBottom: '0.2rem', fontSize: 'clamp(1.2rem, 4vw, 2rem)' }}>
+      <h1 style={{ marginTop: '-1rem', marginBottom: '0.5rem' }}>
         RONDA {round.roundNumber}/{totalRounds}
       </h1>
-      <h2 style={{ fontSize: 'clamp(0.9rem, 3.5vw, 2rem)', marginBottom: '0.5rem', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem' }}>
+      <h2 style={{ fontSize: '2rem', marginBottom: '1rem', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '1rem' }}>
         {gameMode === 'save' ? '💚 SALVA UNA CANCIÓN' : '❌ ELIMINA UNA CANCIÓN'}
       </h2>
 
       {currentPreviewIndex === -1 && (
-        <div style={{ textAlign: 'center', padding: 'clamp(10px, 3vh, 40px)', width: '90%', maxWidth: '100%' }}>
-          <p style={{ fontSize: 'clamp(0.85rem, 2.5vw, 1.1rem)', marginBottom: 'clamp(10px, 2vh, 20px)' }}>
+        <div style={{ textAlign: 'center', padding: '60px' }}>
+          <p style={{ fontSize: '1.3rem', marginBottom: '30px' }}>
             Escucharás <strong>{round.songs.length} canciones</strong> con previews de 10 segundos cada una
           </p>
           <button 
             className="primary" 
             onClick={() => setCurrentPreviewIndex(0)}
-            style={{ fontSize: 'clamp(0.9rem, 2.5vw, 1.1rem)', padding: 'clamp(10px, 2vh, 15px) clamp(20px, 5vw, 35px)', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem', margin: '0 auto' }}
+            style={{ fontSize: '1.2rem', padding: '20px 40px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '1rem', margin: '0 auto' }}
           >
-            <Music size={20} /> Comenzar Previews
+            <Music size={24} /> Comenzar Previews
           </button>
         </div>
       )}
 
       {showingPreview && currentPreviewIndex >= 0 && currentPreviewIndex < round.songs.length && (
-        <div style={{ textAlign: 'center', padding: '0.5rem', width: '95%', maxWidth: '100%' }}>
-          <div className="loading" style={{ marginBottom: '0.8rem', fontSize: 'clamp(1rem, 3vw, 1.3rem)', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem' }}>
-            <Music size={20} /> Reproduciendo...
+        <div style={{ textAlign: 'center', padding: '1rem' }}>
+          <div className="loading" style={{ marginBottom: '1.5rem', fontSize: '1.5rem', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '1rem' }}>
+            <Music size={28} /> Reproduciendo...
           </div>
           
           <img 
             src={round.songs[currentPreviewIndex].albumArt} 
             alt={round.songs[currentPreviewIndex].name}
             style={{
-              width: 'min(420px, 70vw)',
-              height: 'min(420px, 70vw)',
+              maxWidth: 'min(420px, 80vw)',
+              width: '100%',
+              aspectRatio: '1',
               borderRadius: '24px',
               objectFit: 'cover',
-              margin: '0 auto 1.5rem',
+              margin: '0 auto 1rem',
               boxShadow: '0 20px 60px rgba(128, 22, 199, 0.4)'
             }}
           />
-          <h3 style={{ fontSize: '1.8rem', textAlign: 'center', marginBottom: '0.5rem' }}>{round.songs[currentPreviewIndex].name}</h3>
-          <p style={{ fontSize: '1.2rem', opacity: 0.8, textAlign: 'center' }}>{round.songs[currentPreviewIndex].artist}</p>
+          <h3 style={{ fontSize: 'clamp(1.2rem, 5vw, 1.8rem)', textAlign: 'center', marginBottom: '0.5rem', paddingX: '1rem' }}>{round.songs[currentPreviewIndex].name}</h3>
+          <p style={{ fontSize: 'clamp(0.9rem, 4vw, 1.2rem)', opacity: 0.8, textAlign: 'center', paddingX: '1rem' }}>{round.songs[currentPreviewIndex].artist}</p>
         </div>
       )}
 
