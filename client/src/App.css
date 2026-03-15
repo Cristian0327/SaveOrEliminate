@@ -27,7 +27,7 @@ body {
   height: 100vh;
   display: flex;
   flex-direction: column;
-  padding: 15px;
+  padding: 0;
   padding-top: 45px;
   overflow-x: hidden;
   overflow-y: hidden;
@@ -46,10 +46,13 @@ body {
   max-width: 1200px;
   flex: 1;
   margin: 0 auto;
+  padding: 15px;
   overflow-y: auto;
   overflow-x: hidden;
   display: flex;
   flex-direction: column;
+  justify-content: center;
+  align-items: center;
   
   /* Hide scrollbar but keep scrolling functional */
   scrollbar-width: none;

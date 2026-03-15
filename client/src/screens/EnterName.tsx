@@ -1,16 +1,19 @@
 import { useState } from 'react';
+import Header from '../components/Header';
 
 interface EnterNameProps {
   onSubmit: (name: string) => void;
+  onBack?: () => void;
 }
 
-export default function EnterName({ onSubmit }: EnterNameProps) {
+export default function EnterName({ onSubmit, onBack }: EnterNameProps) {
   const [name, setName] = useState('');
 
   return (
-    <div className="screen-container">
+    <>
+      <Header onBack={onBack} showBackButton={!!onBack} />
       <h1>¿Cuál es tu nombre?</h1>
-      <div style={{ maxWidth: '500px', margin: '0 auto', width: '100%' }}>
+      <div style={{ maxWidth: '500px', margin: '0 auto' }}>
         <input
           type="text"
           placeholder="Tu nombre"
@@ -28,6 +31,6 @@ export default function EnterName({ onSubmit }: EnterNameProps) {
           Continuar
         </button>
       </div>
-    </div>
+    </>
   );
 }
