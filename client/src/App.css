@@ -34,17 +34,11 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
-@media (min-width: 1024px) {
-  body {
-    max-height: 100vh;
-    overflow-y: hidden;
-  }
-}
-
 #root {
   width: 100%;
   max-width: 1200px;
   flex: 1;
+  height: 100%;
   margin: 0 auto;
   overflow-y: auto;
   overflow-x: hidden;
@@ -62,7 +56,6 @@ body {
 
 @media (min-width: 1024px) {
   #root {
-    max-height: calc(100vh - 80px);
     overflow: hidden;
   }
 }
