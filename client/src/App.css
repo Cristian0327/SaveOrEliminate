@@ -498,6 +498,52 @@ header {
   box-shadow: none; /* remove button shadow */
 }
 
+/* Selector Styles (Artist, Genre, Year, Decade) */
+.selector-container {
+  width: 100%;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: clamp(1rem, 3vw, 2rem);
+}
+
+.selector-input {
+  width: 100%;
+  max-width: 600px;
+  padding: clamp(8px, 2vw, 12px) !important;
+  font-size: clamp(0.85rem, 2vw, 1rem) !important;
+  margin: 0 auto clamp(1rem, 3vw, 2rem) auto !important;
+  display: block !important;
+}
+
+.selector-title {
+  font-size: clamp(1.5rem, 5vw, 3rem) !important;
+  margin-bottom: clamp(0.8rem, 2vw, 1.5rem) !important;
+}
+
+.selector-subtitle {
+  font-size: clamp(0.85rem, 2vw, 1rem) !important;
+  margin-bottom: clamp(0.8rem, 2vw, 1.5rem) !important;
+}
+
+.selector-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(clamp(100px, 20vw, 150px), 1fr));
+  gap: clamp(0.8rem, 2vw, 1.5rem);
+  width: 100%;
+  margin: 0 auto;
+}
+
+.selector-item {
+  padding: clamp(0.6rem, 2vw, 1.2rem) !important;
+  font-size: clamp(0.75rem, 2vw, 0.95rem) !important;
+  min-height: clamp(80px, 22vw, 130px);
+}
+
+.selector-item img {
+  width: clamp(40px, 10vw, 70px) !important;
+  height: clamp(40px, 10vw, 70px) !important;
+}
+
 /* Range Sliders */
 .range-container {
   width: 100%;

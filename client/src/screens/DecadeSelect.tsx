@@ -52,7 +52,7 @@ export default function DecadeSelect({ onSelect, onBack }: DecadeSelectProps) {
         <Clock size={64} />
       </div>
       
-      <h1>SELECCIONA DÉCADAS</h1>
+      <h1 style={{ fontSize: 'clamp(1.5rem, 5vw, 3rem)' }}>SELECCIONA DÉCADAS</h1>
       
       <div className="card">
         <div style={{ position: 'relative', height: '120px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
@@ -116,16 +116,16 @@ export default function DecadeSelect({ onSelect, onBack }: DecadeSelectProps) {
           />
         </div>
 
-        <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '2rem', marginBottom: '2rem', fontSize: '1.1rem', fontWeight: 600 }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 'clamp(1rem, 2vw, 2rem)', marginBottom: 'clamp(1rem, 2vw, 2rem)', fontSize: 'clamp(0.9rem, 2vw, 1.1rem)', fontWeight: 600 }}>
           <span>{startDecade}s</span>
           <span style={{ color: 'var(--color-principal)' }}>{endDecade}s</span>
         </div>
 
-        <p style={{ textAlign: 'center', marginBottom: '2rem', fontSize: '1.1rem' }}>
+        <p style={{ textAlign: 'center', marginBottom: 'clamp(1rem, 2vw, 2rem)', fontSize: 'clamp(0.9rem, 2vw, 1.1rem)' }}>
           <strong>{numRounds} décadas</strong> = <strong>{numRounds} rondas</strong>
         </p>
 
-        <button className="primary" onClick={handleSubmit} style={{ fontSize: '1.1rem' }}>
+        <button className="primary" onClick={handleSubmit} style={{ fontSize: 'clamp(0.9rem, 2vw, 1.1rem)' }}>
           Confirmar
         </button>
       </div>

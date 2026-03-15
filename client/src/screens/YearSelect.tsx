@@ -52,7 +52,7 @@ export default function YearSelect({ onSelect, onBack }: YearSelectProps) {
         <Calendar size={64} />
       </div>
       
-      <h1>SELECCIONA AÑOS</h1>
+      <h1 style={{ fontSize: 'clamp(1.5rem, 5vw, 3rem)' }}>SELECCIONA AÑOS</h1>
       
       <div className="card">
         <div style={{ position: 'relative', height: '120px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
@@ -118,21 +118,21 @@ export default function YearSelect({ onSelect, onBack }: YearSelectProps) {
         </div>
 
         {/* Labels below */}
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 'clamp(1rem, 2vw, 2rem)' }}>
           <div className="year-display" style={{ textAlign: 'center' }}>
-            <span style={{ fontSize: '0.9rem', opacity: 0.7 }}>DESDE</span>
-            <div style={{ fontSize: '2.5rem', fontFamily: 'var(--font-title)', color: 'var(--color-principal)' }}>{startYear}</div>
+            <span style={{ fontSize: 'clamp(0.75rem, 2vw, 0.9rem)', opacity: 0.7 }}>DESDE</span>
+            <div style={{ fontSize: 'clamp(1.6rem, 4vw, 2.5rem)', fontFamily: 'var(--font-title)', color: 'var(--color-principal)' }}>{startYear}</div>
           </div>
           
-          <div style={{ height: '2px', width: '30px', background: 'rgba(255,255,255,0.2)' }}></div>
+          <div style={{ height: '2px', width: 'clamp(20px, 5vw, 30px)', background: 'rgba(255,255,255,0.2)' }}></div>
           
           <div className="year-display" style={{ textAlign: 'center' }}>
-            <span style={{ fontSize: '0.9rem', opacity: 0.7 }}>HASTA</span>
-            <div style={{ fontSize: '2.5rem', fontFamily: 'var(--font-title)', color: 'var(--color-eliminate)' }}>{endYear}</div>
+            <span style={{ fontSize: 'clamp(0.75rem, 2vw, 0.9rem)', opacity: 0.7 }}>HASTA</span>
+            <div style={{ fontSize: 'clamp(1.6rem, 4vw, 2.5rem)', fontFamily: 'var(--font-title)', color: 'var(--color-eliminate)' }}>{endYear}</div>
           </div>
         </div>
 
-        <p className="text-small" style={{ marginTop: 0 }}>
+        <p className="text-small" style={{ marginTop: 0, fontSize: 'clamp(0.8rem, 2vw, 0.9rem)' }}>
           Rango seleccionado: <strong style={{ color: '#fff' }}>{rangeYears} años</strong>
         </p>
 

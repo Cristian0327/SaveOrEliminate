@@ -47,8 +47,8 @@ export default function ArtistSelect({ onSelect, onBack }: ArtistSelectProps) {
   return (
     <>
       <Header onBack={onBack} showBackButton={!!onBack} />
-      <div style={{ width: '100%', maxWidth: '1400px', margin: '0 auto', padding: '2rem' }}>
-        <h1 style={{ marginBottom: '1.5rem' }}>SELECCIONA UN ARTISTA</h1>
+      <div style={{ width: '100%', maxWidth: '1400px', margin: '0 auto', padding: 'clamp(1rem, 3vw, 2rem)' }}>
+        <h1 style={{ marginBottom: 'clamp(0.8rem, 2vw, 1.5rem)', fontSize: 'clamp(1.5rem, 5vw, 3rem)' }}>SELECCIONA UN ARTISTA</h1>
 
         <input
           type="text"
@@ -58,15 +58,14 @@ export default function ArtistSelect({ onSelect, onBack }: ArtistSelectProps) {
           style={{
             width: '100%',
             maxWidth: '600px',
-            padding: '12px',
-            fontSize: '1rem',
+            padding: 'clamp(8px, 2vw, 12px)',
+            fontSize: 'clamp(0.85rem, 2vw, 1rem)',
             borderRadius: '10px',
             border: '2px solid rgba(255, 255, 255, 0.3)',
             background: 'rgba(255, 255, 255, 0.1)',
             color: 'white',
-            marginBottom: '2rem',
             display: 'block',
-            margin: '0 auto 2rem auto'
+            margin: '0 auto clamp(1rem, 3vw, 2rem) auto'
           }}
         />
 
@@ -76,17 +75,17 @@ export default function ArtistSelect({ onSelect, onBack }: ArtistSelectProps) {
 
         {displayArtists.length > 0 ? (
           <>
-            <p style={{ opacity: 0.7, marginBottom: '1.5rem', textAlign: 'center' }}>
+            <p style={{ opacity: 0.7, marginBottom: 'clamp(0.8rem, 2vw, 1.5rem)', textAlign: 'center', fontSize: 'clamp(0.85rem, 2vw, 1rem)' }}>
               {searchQuery.length >= 2 ? `${searchResults.length} resultados` : 'Top 20 artistas populares'}
             </p>
-            <div className="grid" style={{ maxWidth: '1300px', gridTemplateColumns: 'repeat(5, 1fr)', gap: '1.2rem', margin: '0 auto' }}>
+            <div className="grid" style={{ maxWidth: '1300px', gridTemplateColumns: 'repeat(auto-fit, minmax(clamp(100px, 20vw, 140px), 1fr))', gap: 'clamp(0.8rem, 2vw, 1.2rem)', margin: '0 auto' }}>
               {displayArtists.map((artist) => (
                 <button
                   key={artist.name}
                   onClick={() => onSelect(artist.name)}
                   style={{
-                    padding: '1rem 0.8rem',
-                    fontSize: '0.85rem',
+                    padding: 'clamp(0.6rem, 1.5vw, 1rem) clamp(0.5rem, 1.5vw, 0.8rem)',
+                    fontSize: 'clamp(0.7rem, 2vw, 0.85rem)',
                     background: 'rgba(128, 22, 199, 0.08)',
                     border: '1px solid rgba(128, 22, 199, 0.15)',
                     borderRadius: '14px',
@@ -96,9 +95,9 @@ export default function ArtistSelect({ onSelect, onBack }: ArtistSelectProps) {
                     display: 'flex',
                     flexDirection: 'column',
                     alignItems: 'center',
-                    gap: '0.6rem',
+                    gap: 'clamp(0.3rem, 1vw, 0.6rem)',
                     overflow: 'hidden',
-                    minHeight: '140px',
+                    minHeight: 'clamp(100px, 25vw, 140px)',
                     justifyContent: 'flex-end',
                   }}
                   onMouseEnter={(e) => {
@@ -117,20 +116,20 @@ export default function ArtistSelect({ onSelect, onBack }: ArtistSelectProps) {
                       src={artist.image} 
                       alt={artist.name}
                       style={{
-                        width: '80px',
-                        height: '80px',
+                        width: 'clamp(50px, 12vw, 80px)',
+                        height: 'clamp(50px, 12vw, 80px)',
                         borderRadius: '50%',
                         objectFit: 'cover',
                       }}
                     />
                   )}
-                  <span style={{ fontSize: '0.8rem', textAlign: 'center', wordBreak: 'break-word', fontWeight: 600, maxWidth: '100%' }}>{artist.name}</span>
+                  <span style={{ fontSize: 'clamp(0.65rem, 1.8vw, 0.8rem)', textAlign: 'center', wordBreak: 'break-word', fontWeight: 600, maxWidth: '100%' }}>{artist.name}</span>
                 </button>
               ))}
             </div>
           </>
         ) : (
-          <p style={{ opacity: 0.7, textAlign: 'center' }}>
+          <p style={{ opacity: 0.7, textAlign: 'center', fontSize: 'clamp(0.85rem, 2vw, 1rem)' }}>
             {searchQuery.length >= 2 ? 'No se encontraron artistas' : 'Cargando...'}
           </p>
         )}
