@@ -51,6 +51,9 @@ body {
   overflow-x: hidden;
   display: flex;
   flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
   
   /* Hide scrollbar but keep scrolling functional */
   scrollbar-width: none;

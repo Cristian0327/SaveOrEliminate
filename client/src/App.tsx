@@ -204,6 +204,7 @@ function App() {
               socket.emit('create-room', { playerName: name });
             }
           }}
+          onBack={goBack}
         />;
 
       case 'lobby':
@@ -315,6 +316,7 @@ function App() {
           currentYear={gameConfig.currentYear as number | undefined}
           currentDecade={gameConfig.currentDecade as number | undefined}
           onTimerEnd={() => navigateTo('vote-results')}
+          onBack={goBack}
         />;
 
       case 'vote-results':

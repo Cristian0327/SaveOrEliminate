@@ -14,6 +14,7 @@ interface GamePlayProps {
   currentYear?: number;
   currentDecade?: number;
   onTimerEnd: () => void;
+  onBack?: () => void;
 }
 
 // Helper: Reproducir audio simple de 10 segundos
@@ -49,7 +50,7 @@ function createSimpleAudio(audioElement: HTMLAudioElement) {
   };
 }
 
-export default function GamePlay({ round, totalRounds, roomId, gameMode, onTimerEnd }: GamePlayProps) {
+export default function GamePlay({ round, totalRounds, roomId, gameMode, onTimerEnd, onBack }: GamePlayProps) {
   const [selectedSong, setSelectedSong] = useState<string | null>(null);
   const [currentPreviewIndex, setCurrentPreviewIndex] = useState(-1);
   const [previewsPlayed, setPreviewsPlayed] = useState(false);
@@ -165,7 +166,7 @@ export default function GamePlay({ round, totalRounds, roomId, gameMode, onTimer
 
   return (
     <>
-      <Header showBackButton={false} showVolume={true} />
+      <Header showBackButton={true} showVolume={true} onBack={onBack} />
       <audio ref={audioRef} style={{ display: 'none' }} />
 
       <h1 style={{ marginTop: 'clamp(-0.5rem, -2vw, 0rem)', marginBottom: 'clamp(0.05rem, 0.5vw, 0.2rem)', fontSize: 'clamp(0.85rem, 3vw, 1.3rem)' }}>
