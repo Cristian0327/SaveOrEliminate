@@ -133,11 +133,12 @@ export default function VoteResults({ round, votes, players, isHost, onNextRound
 
       {isHost && (
         <div style={{ marginTop: 'clamp(0.8rem, 1.2vw, 1rem)', width: '100%', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 'clamp(0.6rem, 1vw, 0.8rem)' }}>
-          <button className="primary" onClick={onNextRound} style={{ fontSize: 'clamp(0.7rem, 2vw, 0.85rem)', padding: 'clamp(0.6rem, 1vw, 0.8rem)', fontWeight: 'bold' }}>
+          <button type="button" className="primary" onClick={onNextRound} style={{ fontSize: 'clamp(0.7rem, 2vw, 0.85rem)', padding: 'clamp(0.6rem, 1vw, 0.8rem)', fontWeight: 'bold' }}>
             Siguiente Ronda
           </button>
           {onEndGame && (
             <button 
+              type="button"
               className="eliminate" 
               onClick={onEndGame} 
               style={{ fontSize: 'clamp(0.7rem, 2vw, 0.85rem)', padding: 'clamp(0.6rem, 1vw, 0.8rem)', fontWeight: 'bold' }}

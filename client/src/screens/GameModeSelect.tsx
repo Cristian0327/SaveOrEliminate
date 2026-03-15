@@ -17,6 +17,7 @@ export default function GameModeSelect({ onSelect, onBack }: GameModeSelectProps
       
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '3rem', width: '100%', maxWidth: '900px' }}>
         <button 
+          type="button"
           className="save" 
           onClick={() => onSelect('save')}
           style={{ height: '220px', fontSize: '1.2rem', display: 'flex', flexDirection: 'column', gap: '20px', borderRadius: '24px', padding: '2rem', alignItems: 'center', justifyContent: 'center' }}
@@ -28,6 +29,7 @@ export default function GameModeSelect({ onSelect, onBack }: GameModeSelectProps
         </button>
         
         <button 
+          type="button"
           className="eliminate" 
           onClick={() => onSelect('eliminate')}
           style={{ height: '220px', fontSize: '1.2rem', display: 'flex', flexDirection: 'column', gap: '20px', borderRadius: '24px', padding: '2rem', alignItems: 'center', justifyContent: 'center' }}

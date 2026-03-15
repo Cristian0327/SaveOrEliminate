@@ -136,7 +136,7 @@ export default function YearSelect({ onSelect, onBack }: YearSelectProps) {
           Rango seleccionado: <strong style={{ color: '#fff' }}>{rangeYears} años</strong>
         </p>
 
-        <button className="primary" onClick={handleSubmit}>
+        <button type="button" className="primary" onClick={handleSubmit}>
           CONFIRMAR RANGO <ArrowRight size={20} />
         </button>
       </div>

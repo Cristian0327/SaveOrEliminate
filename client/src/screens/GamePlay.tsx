@@ -245,6 +245,7 @@ export default function GamePlay({ round, totalRounds, roomId, isHost, gameMode,
             <div style={{ textAlign: 'center', marginBottom: 'clamp(0.6rem, 1vw, 1rem)' }}>
               {isHost ? (
                 <button 
+                  type="button"
                   className="primary"
                   onClick={handleStartVoting}
                   style={{ fontSize: 'clamp(0.8rem, 2.5vw, 1rem)', padding: 'clamp(0.6rem, 1.5vw, 1rem) clamp(1.5rem, 4vw, 2.5rem)', width: 'clamp(160px, 60vw, 300px)' }}

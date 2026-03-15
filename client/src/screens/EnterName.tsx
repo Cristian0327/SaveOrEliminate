@@ -25,6 +25,7 @@ export default function EnterName({ onSubmit, onBack }: EnterNameProps) {
             style={{ marginBottom: '2.5rem' }}
           />
           <button
+            type="button"
             className="primary"
             onClick={() => onSubmit(name)}
             disabled={name.trim().length === 0}

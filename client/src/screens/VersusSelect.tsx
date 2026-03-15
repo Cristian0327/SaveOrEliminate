@@ -53,6 +53,7 @@ export default function VersusSelect({ onSelect, onBack }: VersusSelectProps) {
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '1rem' }}>
             {typeOptions.map(opt => (
               <button
+                type="button"
                 key={opt.value}
                 onClick={() => setType(opt.value)}
                 style={{
@@ -138,7 +139,7 @@ export default function VersusSelect({ onSelect, onBack }: VersusSelectProps) {
             ⚔️ {option1 || '???'} vs {option2 || '???'}
           </div>
 
-          <button className="primary" onClick={handleSubmit} style={{ fontSize: '1.1rem', padding: '1rem' }}>
+          <button type="button" className="primary" onClick={handleSubmit} style={{ fontSize: '1.1rem', padding: '1rem' }}>
             Iniciar Versus
           </button>
         </div>

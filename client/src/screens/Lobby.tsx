@@ -84,6 +84,7 @@ export default function Lobby({ room, isHost, onStartGame, onBack }: LobbyProps)
         </h1>
         
         <button 
+          type="button"
           onClick={copyRoomLink} 
           className="secondary" 
           style={{ width: 'auto', padding: 'clamp(0.6rem, 1vw, 0.8rem) clamp(1rem, 2vw, 1.5rem)', fontSize: 'clamp(0.7rem, 1.5vw, 0.9rem)', background: copied ? 'rgba(139, 255, 98, 0.2)' : 'transparent', transition: 'all 0.3s' }}
@@ -95,6 +96,7 @@ export default function Lobby({ room, isHost, onStartGame, onBack }: LobbyProps)
       <div style={{ marginTop: 'clamp(0.8rem, 1vw, 1.2rem)' }}>
         {isHost ? (
           <button
+            type="button"
             className="primary"
             onClick={onStartGame}
             disabled={room.players.length < 1}

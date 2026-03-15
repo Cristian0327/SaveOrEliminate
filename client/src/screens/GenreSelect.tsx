@@ -58,6 +58,7 @@ export default function GenreSelect({ onSelect, onBack }: GenreSelectProps) {
             <div className="selector-grid">
               {displayGenres.map((genre) => (
                 <button
+                  type="button"
                   key={genre}
                   onClick={() => onSelect(genre)}
                   className="selector-item secondary"

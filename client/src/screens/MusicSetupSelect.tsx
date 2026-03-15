@@ -44,6 +44,7 @@ export default function MusicSetupSelect({ onSelectType, onBack }: MusicSetupSel
         <div className="grid" style={{ maxWidth: '1000px', gridTemplateColumns: 'repeat(auto-fit, minmax(110px, 1fr))', gap: '1rem', margin: '0 auto' }}>
           {typeOptions.map((opt) => (
             <button 
+              type="button"
               key={opt.type} 
               onClick={() => setSelectedType(opt.type)}
               style={{ 
@@ -145,6 +146,7 @@ export default function MusicSetupSelect({ onSelectType, onBack }: MusicSetupSel
         </div>
 
         <button 
+          type="button"
           className="primary"
           onClick={handleConfirm}
           disabled={!selectedType}

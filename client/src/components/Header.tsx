@@ -64,7 +64,7 @@ export default function Header({ onBack, showBackButton = true, showVolume = tru
   return (
     <header className="header-bar">
       {showBackButton && onBack ? (
-        <button onClick={onBack} className="back-btn" aria-label="Volver">
+        <button type="button" onClick={onBack} className="back-btn" aria-label="Volver">
           <ChevronLeft size={32} />
         </button>
       ) : (
@@ -104,6 +104,7 @@ export default function Header({ onBack, showBackButton = true, showVolume = tru
             </div>
           )}
           <button 
+            type="button"
             onClick={() => setShowVolumeSlider(!showVolumeSlider)} 
             style={{ 
               width: '48px', 

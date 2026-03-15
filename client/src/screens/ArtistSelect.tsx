@@ -81,6 +81,7 @@ export default function ArtistSelect({ onSelect, onBack }: ArtistSelectProps) {
             <div className="grid" style={{ maxWidth: '1300px', gridTemplateColumns: 'repeat(auto-fit, minmax(clamp(100px, 20vw, 140px), 1fr))', gap: 'clamp(0.8rem, 2vw, 1.2rem)', margin: '0 auto' }}>
               {displayArtists.map((artist) => (
                 <button
+                  type="button"
                   key={artist.name}
                   onClick={() => onSelect(artist.name)}
                   style={{

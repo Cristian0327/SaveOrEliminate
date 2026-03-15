@@ -125,7 +125,7 @@ export default function DecadeSelect({ onSelect, onBack }: DecadeSelectProps) {
           <strong>{numRounds} décadas</strong> = <strong>{numRounds} rondas</strong>
         </p>
 
-        <button className="primary" onClick={handleSubmit} style={{ fontSize: 'clamp(0.9rem, 2vw, 1.1rem)' }}>
+        <button type="button" className="primary" onClick={handleSubmit} style={{ fontSize: 'clamp(0.9rem, 2vw, 1.1rem)' }}>
           Confirmar
         </button>
       </div>
