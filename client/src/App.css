@@ -41,27 +41,7 @@ body {
   max-width: 1200px;
   max-height: calc(100vh - 80px);
   margin: 0 auto;
-  overflow-y: auto;
-  overflow-x: hidden;
-  scrollbar-width: thin;
-  scrollbar-color: transparent transparent;
-}
-
-#root::-webkit-scrollbar {
-  width: 2px;
-}
-
-#root::-webkit-scrollbar-track {
-  background: transparent;
-}
-
-#root::-webkit-scrollbar-thumb {
-  background: transparent;
-  border-radius: 4px;
-}
-
-#root:hover::-webkit-scrollbar-thumb {
-  background: rgba(128, 22, 199, 0.5);
+  overflow: hidden;
 }
 
 .screen-container {
