@@ -54,7 +54,7 @@ io.on('connection', (socket) => {
       io.to(roomId).emit('player-joined', room);
       console.log(`${playerName} joined room ${roomId}`);
     } else {
-      socket.emit('error', { message: 'Room not found or full' });
+      socket.emit('error', { message: 'La sala no fue encontrada o está llena' });
     }
   });
 

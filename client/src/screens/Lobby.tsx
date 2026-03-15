@@ -33,10 +33,10 @@ export default function Lobby({ room, isHost, onStartGame, onBack }: LobbyProps)
 
         <div className="players-grid" style={{ 
           display: 'grid', 
-          gridTemplateColumns: 'repeat(auto-fit, minmax(130px, 1fr))', 
+          gridTemplateColumns: 'repeat(4, 1fr)', 
           gap: '1rem',
           marginBottom: 'clamp(0.8rem, 1.2vw, 1rem)',
-          maxWidth: '900px',
+          maxWidth: '100%',
           margin: '0 auto clamp(0.8rem, 1.2vw, 1rem)'
         }}>
           {room.players.map((player) => (

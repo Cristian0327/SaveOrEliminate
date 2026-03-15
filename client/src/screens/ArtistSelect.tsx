@@ -47,7 +47,7 @@ export default function ArtistSelect({ onSelect, onBack }: ArtistSelectProps) {
   return (
     <>
       <Header onBack={onBack} showBackButton={!!onBack} />
-      <div style={{ width: '100%', maxWidth: '1400px', margin: '0 auto', padding: 'clamp(1rem, 3vw, 2rem)' }}>
+      <div style={{ width: '100%', maxWidth: '1400px', margin: '0 auto', padding: 'clamp(1rem, 3vw, 2rem)', overflowX: 'hidden' }}>
         <h1 style={{ marginBottom: 'clamp(0.8rem, 2vw, 1.5rem)', fontSize: 'clamp(1.5rem, 5vw, 3rem)' }}>SELECCIONA UN ARTISTA</h1>
 
         <input

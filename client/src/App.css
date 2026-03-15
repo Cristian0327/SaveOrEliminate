@@ -457,6 +457,31 @@ button.save {
   }
 }
 
+/* Players Grid Responsive Layout */
+.players-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr) !important;
+  gap: 1rem !important;
+}
+
+@media (max-width: 1200px) {
+  .players-grid {
+    grid-template-columns: repeat(3, 1fr) !important;
+  }
+}
+
+@media (max-width: 768px) {
+  .players-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .players-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+}
+
 .full-width {
   width: 100%;
 }

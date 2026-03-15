@@ -53,7 +53,7 @@ function createSimpleAudio(audioElement: HTMLAudioElement) {
 export default function GamePlay({ round, totalRounds, roomId, isHost, gameMode, onTimerEnd, onBack }: GamePlayProps) {
   const [selectedSong, setSelectedSong] = useState<string | null>(null);
   const [currentPreviewIndex, setCurrentPreviewIndex] = useState(-1);
-  const [previewsPlayed, setPreviewsPlayed] = useState(round.roundNumber > 1); // Skip previews after first round
+  const [previewsPlayed, setPreviewsPlayed] = useState(false); // Always start with previews
   const [timer, setTimer] = useState(10);
   const [showingPreview, setShowingPreview] = useState(round.roundNumber === 1);
   const [votingStarted, setVotingStarted] = useState(false);
@@ -270,9 +270,9 @@ export default function GamePlay({ round, totalRounds, roomId, isHost, gameMode,
                 <div
                   key={song.id}
                   className={`song-card ${isSelected ? 'selected' : ''}`}
-                  onClick={() => votingStarted && previewsPlayed && isHost ? handleSongSelect(song.id) : null}
+                  onClick={() => votingStarted && previewsPlayed ? handleSongSelect(song.id) : null}
                   onMouseEnter={(e) => {
-                    if (votingStarted && previewsPlayed && isHost) {
+                    if (votingStarted && previewsPlayed) {
                       const target = e.currentTarget as HTMLElement;
                       const imgElement = target.querySelector('img') as HTMLImageElement;
                       if (imgElement) {
@@ -292,7 +292,7 @@ export default function GamePlay({ round, totalRounds, roomId, isHost, gameMode,
                     target.style.transform = isSelected ? 'scale(1.05)' : 'translateY(0)';
                   }}
                   style={{ 
-                    cursor: votingStarted && previewsPlayed && isHost ? 'pointer' : 'default', 
+                    cursor: votingStarted && previewsPlayed ? 'pointer' : 'default', 
                     opacity: previewsPlayed ? 1 : 0.5,
                     position: 'relative',
                   }}
