@@ -10,7 +10,7 @@ export default function EnterName({ onSubmit, onBack }: EnterNameProps) {
   const [name, setName] = useState('');
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', width: '100%', flex: 1 }}>
+    <div style={{ display: 'flex', flexDirection: 'column', width: '100%', height: '100%' }}>
       <Header onBack={onBack} showBackButton={!!onBack} />
       <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', flex: 1, width: '100%' }}>
         <h1>¿Cuál es tu nombre?</h1>
