@@ -2,10 +2,9 @@ import { useState } from 'react';
 
 interface EnterNameProps {
   onSubmit: (name: string) => void;
-  onBack?: () => void;
 }
 
-export default function EnterName({ onSubmit, onBack }: EnterNameProps) {
+export default function EnterName({ onSubmit }: EnterNameProps) {
   const [name, setName] = useState('');
 
   return (
