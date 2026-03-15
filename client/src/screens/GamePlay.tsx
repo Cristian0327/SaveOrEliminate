@@ -176,8 +176,8 @@ export default function GamePlay({ round, totalRounds, roomId, gameMode, onTimer
       </h2>
 
       {currentPreviewIndex === -1 && (
-        <div style={{ textAlign: 'center', padding: '60px' }}>
-          <p style={{ fontSize: '1.3rem', marginBottom: '30px' }}>
+        <div style={{ textAlign: 'center', padding: 'clamp(20px, 5vh, 60px)' }}>
+          <p style={{ fontSize: 'clamp(1rem, 3vw, 1.3rem)', marginBottom: 'clamp(15px, 3vh, 30px)' }}>
             Escucharás <strong>{round.songs.length} canciones</strong> con previews de 10 segundos cada una
           </p>
           <button 
@@ -200,8 +200,8 @@ export default function GamePlay({ round, totalRounds, roomId, gameMode, onTimer
             src={round.songs[currentPreviewIndex].albumArt} 
             alt={round.songs[currentPreviewIndex].name}
             style={{
-              width: '420px',
-              height: '420px',
+              width: 'min(420px, 70vw)',
+              height: 'min(420px, 70vw)',
               borderRadius: '24px',
               objectFit: 'cover',
               margin: '0 auto 1.5rem',
