@@ -36,18 +36,18 @@ export default function VoteResults({ round, votes, players, isHost, onNextRound
   return (
     <>
       <Header showBackButton={false} />
-      <h1 style={{ fontSize: 'clamp(1.5rem, 5vw, 2.5rem)', marginBottom: '0.5rem' }}>Resultados - Ronda {round.roundNumber}</h1>
+      <h1 style={{ fontSize: 'clamp(1.5rem, 5vw, 2.5rem)', marginBottom: 'clamp(0.3rem, 1vw, 0.5rem)' }}>Resultados - Ronda {round.roundNumber}</h1>
       {round.yearLabel && (
         <div style={{
           display: 'inline-block',
           background: 'linear-gradient(135deg, #6c63ff, #ff6584)',
           color: '#fff',
-          borderRadius: '30px',
+          borderRadius: 'clamp(20px, 3vw, 30px)',
           padding: 'clamp(0.4rem, 1vw, 0.8rem) clamp(1rem, 2vw, 1.5rem)',
-          fontSize: 'clamp(0.9rem, 2.5vw, 1.1rem)',
+          fontSize: 'clamp(0.85rem, 2.5vw, 1.1rem)',
           fontWeight: 700,
-          letterSpacing: '2px',
-          marginBottom: 'clamp(1rem, 2vw, 1.5rem)',
+          letterSpacing: 'clamp(1px, 0.3vw, 2px)',
+          marginBottom: 'clamp(0.8rem, 1.5vw, 1.2rem)',
           boxShadow: '0 4px 16px rgba(108,99,255,0.3)',
         }}>
           📅 {round.yearLabel}
@@ -64,12 +64,12 @@ export default function VoteResults({ round, votes, players, isHost, onNextRound
                 <div key={item.song.id} style={{
                   display: 'grid',
                   gridTemplateColumns: 'clamp(70px, 15vw, 100px) 1fr',
-                  gap: 'clamp(0.6rem, 1vw, 0.9rem)',
+                  gap: 'clamp(0.5rem, 1vw, 0.8rem)',
                   alignItems: 'center',
                   background: 'rgba(255, 255, 255, 0.05)',
                   border: '1px solid rgba(255, 255, 255, 0.1)',
-                  borderRadius: '12px',
-                  padding: 'clamp(0.6rem, 1vw, 0.9rem)',
+                  borderRadius: 'clamp(8px, 1.5vw, 12px)',
+                  padding: 'clamp(0.5rem, 0.8vw, 0.8rem)',
                 }}>
                   {/* LEFT: Imagen + Votantes */}
                   <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 'clamp(0.3rem, 0.5vw, 0.5rem)' }}>
@@ -85,13 +85,14 @@ export default function VoteResults({ round, votes, players, isHost, onNextRound
                       }}
                     />
                     <div style={{ textAlign: 'center', width: '100%' }}>
-                      <div style={{ fontWeight: 600, fontSize: 'clamp(0.5rem, 1.3vw, 0.65rem)', marginBottom: '0.05rem', wordBreak: 'break-word' }}>
+                      <div style={{ fontWeight: 600, fontSize: 'clamp(0.5rem, 1.2vw, 0.65rem)', marginBottom: 'clamp(0.02rem, 0.1vw, 0.05rem)', wordBreak: 'break-word' }}
+                        >
                         {item.song.name}
                       </div>
-                      <div style={{ fontSize: 'clamp(0.45rem, 1vw, 0.55rem)', opacity: 0.7 }}>
+                      <div style={{ fontSize: 'clamp(0.45rem, 0.9vw, 0.55rem)', opacity: 0.7 }}>
                         {item.song.artist}
                       </div>
-                      <div style={{ fontSize: 'clamp(0.4rem, 0.9vw, 0.5rem)', color: 'rgba(251, 244, 254, 0.8)', marginTop: '0.2rem', lineHeight: '1.1' }}>
+                      <div style={{ fontSize: 'clamp(0.4rem, 0.8vw, 0.5rem)', color: 'rgba(251, 244, 254, 0.8)', marginTop: 'clamp(0.1rem, 0.4vw, 0.2rem)', lineHeight: '1.1' }}>
                         <strong>Votaron:</strong> {item.voters.join(', ')}
                       </div>
                     </div>

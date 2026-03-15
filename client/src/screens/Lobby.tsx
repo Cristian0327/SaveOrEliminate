@@ -25,9 +25,9 @@ export default function Lobby({ room, isHost, onStartGame, onBack }: LobbyProps)
       <Header onBack={onBack} showBackButton={!!onBack} />
       
       <div style={{ width: '100%', marginBottom: '2rem' }}>
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '2rem' }}>
-          <h2 style={{ fontSize: '2rem', margin: 0, display: 'flex', alignItems: 'center', gap: '15px' }}>
-            <Users size={28} color="var(--color-principal)" /> JUGADORES <span style={{ opacity: 0.5, fontSize: '1.5rem' }}>({room.players.length})</span>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: 'clamp(1.2rem, 2vw, 2rem)' }}>
+          <h2 style={{ fontSize: 'clamp(1.5rem, 4vw, 2rem)', margin: 0, display: 'flex', alignItems: 'center', gap: 'clamp(10px, 2vw, 15px)' }}>
+            <Users size={28} color="var(--color-principal)" /> JUGADORES <span style={{ opacity: 0.5, fontSize: 'clamp(1.2rem, 3vw, 1.5rem)' }}>({room.players.length})</span>
           </h2>
         </div>
 
@@ -43,8 +43,8 @@ export default function Lobby({ room, isHost, onStartGame, onBack }: LobbyProps)
             <div key={player.id} style={{
               background: 'rgba(255,255,255,0.05)',
               border: player.isHost ? '2px solid var(--color-principal)' : '1px solid rgba(255,255,255,0.1)',
-              borderRadius: '16px',
-              padding: '1rem',
+              borderRadius: 'clamp(12px, 2vw, 16px)',
+              padding: 'clamp(0.7rem, 1.5vw, 1rem)',
               display: 'flex',
               flexDirection: 'column',
               alignItems: 'center',
@@ -54,22 +54,22 @@ export default function Lobby({ room, isHost, onStartGame, onBack }: LobbyProps)
               transition: 'all 0.3s'
             }}>
               {player.isHost && (
-                <div style={{ position: 'absolute', top: -15, background: '#1E1921', padding: '2px 8px', borderRadius: '12px' }}>
+                <div style={{ position: 'absolute', top: 'clamp(-18px, -2vw, -12px)', background: '#1E1921', padding: 'clamp(1px, 0.3vw, 2px) clamp(6px, 1vw, 8px)', borderRadius: 'clamp(10px, 1.5vw, 12px)' }}>
                   <Crown size={16} color="#FFD700" fill="#FFD700" />
                 </div>
               )}
               <div style={{ 
-                width: '60px', height: '60px', 
+                width: 'clamp(50px, 12vw, 80px)', height: 'clamp(50px, 12vw, 80px)', 
                 background: player.isHost ? 'var(--color-principal)' : 'rgba(128, 22, 199, 0.2)',
                 borderRadius: '50%',
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
-                marginBottom: '1rem',
-                fontSize: '1.8rem',
+                marginBottom: 'clamp(0.6rem, 1.5vw, 1rem)',
+                fontSize: 'clamp(1.2rem, 3vw, 1.8rem)',
                 fontWeight: 'bold'
               }}>
                 {player.name.charAt(0).toUpperCase()}
               </div>
-              <span style={{ fontWeight: 700, fontSize: '1.1rem', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', maxWidth: '100%' }}>
+              <span style={{ fontWeight: 700, fontSize: 'clamp(0.8rem, 2vw, 1.1rem)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', maxWidth: '100%' }}>
                 {player.name}
               </span>
             </div>
@@ -77,38 +77,38 @@ export default function Lobby({ room, isHost, onStartGame, onBack }: LobbyProps)
         </div>
       </div>
 
-      <div className="card" style={{ alignItems: 'center', textAlign: 'center', marginBottom: '4rem', background: 'transparent', border: 'none', boxShadow: 'none' }}>
-        <p className="text-small" style={{ marginBottom: '0.5rem', fontSize: '0.9rem', opacity: 0.7 }}>SALA DE JUEGO</p>
-        <h1 style={{ marginBottom: '1.5rem', fontSize: '2.5rem', letterSpacing: '6px' }}>
+      <div className="card" style={{ alignItems: 'center', textAlign: 'center', marginBottom: 'clamp(2rem, 3vw, 3rem)', background: 'transparent', border: 'none', boxShadow: 'none' }}>
+        <p className="text-small" style={{ marginBottom: 'clamp(0.3rem, 1vw, 0.5rem)', fontSize: 'clamp(0.7rem, 1.5vw, 0.9rem)', opacity: 0.7 }}>SALA DE JUEGO</p>
+        <h1 style={{ marginBottom: 'clamp(1rem, 2vw, 1.5rem)', fontSize: 'clamp(1.8rem, 5vw, 2.5rem)', letterSpacing: 'clamp(4px, 1vw, 6px)' }}>
           {room.id}
         </h1>
         
         <button 
           onClick={copyRoomLink} 
           className="secondary" 
-          style={{ width: 'auto', padding: '0.8rem 1.5rem', fontSize: '0.9rem', background: copied ? 'rgba(139, 255, 98, 0.2)' : 'transparent', transition: 'all 0.3s' }}
+          style={{ width: 'auto', padding: 'clamp(0.6rem, 1vw, 0.8rem) clamp(1rem, 2vw, 1.5rem)', fontSize: 'clamp(0.7rem, 1.5vw, 0.9rem)', background: copied ? 'rgba(139, 255, 98, 0.2)' : 'transparent', transition: 'all 0.3s' }}
         >
           <Copy size={16} /> {copied ? '¡Copiado!' : 'Copiar Enlace'}
         </button>
       </div>
 
-      <div style={{ marginTop: '3rem' }}>
+      <div style={{ marginTop: 'clamp(2rem, 2.5vw, 3rem)' }}>
         {isHost ? (
           <button
             className="primary"
             onClick={onStartGame}
             disabled={room.players.length < 1}
-            style={{ width: '100%', padding: '1.5rem' }}
+            style={{ width: '100%', padding: 'clamp(1rem, 2vw, 1.5rem)', fontSize: 'clamp(0.8rem, 2vw, 1rem)' }}
           >
             <Play size={24} fill="currentColor" /> CONFIGURAR PARTIDA
           </button>
         ) : (
-          <div className="card" style={{ background: 'rgba(128, 22, 199, 0.1)', border: '1px solid var(--color-principal)', marginTop: '1rem' }}>
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '1rem' }}>
+          <div className="card" style={{ background: 'rgba(128, 22, 199, 0.1)', border: '1px solid var(--color-principal)', marginTop: 'clamp(1rem, 2vw, 1.5rem)' }}>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 'clamp(0.6rem, 1.5vw, 1rem)' }}>
               <Loader size={24} className="spin" style={{ animation: 'spin 2s linear infinite' }} />
               <div>
-                <h3 style={{ margin: 0, fontSize: '1.1rem', textAlign: 'left' }}>ESPERANDO AL HOST</h3>
-                <p style={{ margin: 0, fontSize: '0.8rem', textAlign: 'left', opacity: 0.7 }}>El anfitrión está configurando la partida...</p>
+                <h3 style={{ margin: 0, fontSize: 'clamp(0.8rem, 2.5vw, 1.1rem)', textAlign: 'left' }}>ESPERANDO AL HOST</h3>
+                <p style={{ margin: 0, fontSize: 'clamp(0.6rem, 1.5vw, 0.8rem)', textAlign: 'left', opacity: 0.7 }}>El anfitrión está configurando la partida...</p>
               </div>
             </div>
           </div>
