@@ -200,17 +200,16 @@ export default function GamePlay({ round, totalRounds, roomId, gameMode, onTimer
             src={round.songs[currentPreviewIndex].albumArt} 
             alt={round.songs[currentPreviewIndex].name}
             style={{
-              maxWidth: 'min(420px, 80vw)',
-              width: '100%',
-              aspectRatio: '1',
+              width: '420px',
+              height: '420px',
               borderRadius: '24px',
               objectFit: 'cover',
-              margin: '0 auto 1rem',
+              margin: '0 auto 1.5rem',
               boxShadow: '0 20px 60px rgba(128, 22, 199, 0.4)'
             }}
           />
-          <h3 style={{ fontSize: 'clamp(1.2rem, 5vw, 1.8rem)', textAlign: 'center', marginBottom: '0.5rem', paddingX: '1rem' }}>{round.songs[currentPreviewIndex].name}</h3>
-          <p style={{ fontSize: 'clamp(0.9rem, 4vw, 1.2rem)', opacity: 0.8, textAlign: 'center', paddingX: '1rem' }}>{round.songs[currentPreviewIndex].artist}</p>
+          <h3 style={{ fontSize: '1.8rem', textAlign: 'center', marginBottom: '0.5rem' }}>{round.songs[currentPreviewIndex].name}</h3>
+          <p style={{ fontSize: '1.2rem', opacity: 0.8, textAlign: 'center' }}>{round.songs[currentPreviewIndex].artist}</p>
         </div>
       )}
 
