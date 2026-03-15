@@ -163,16 +163,6 @@ export default function GamePlay({ round, totalRounds, roomId, gameMode, onTimer
     socket.emit('start-timer', { roomId });
   };
 
-  const handleSelectNothing = () => {
-    setSelectedSong('NONE');
-    socket.emit('submit-vote', { roomId, songId: 'NONE' });
-  };
-
-  const handleSelectAny = () => {
-    const randomSong = round.songs[Math.floor(Math.random() * round.songs.length)];
-    handleSongSelect(randomSong.id);
-  };
-
   return (
     <>
       <Header showBackButton={false} showVolume={true} />
