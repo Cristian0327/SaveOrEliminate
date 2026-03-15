@@ -204,7 +204,6 @@ function App() {
               socket.emit('create-room', { playerName: name });
             }
           }}
-          onBack={goBack}
         />;
 
       case 'lobby':
