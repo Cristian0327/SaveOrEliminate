@@ -1,8 +1,55 @@
 import type { Room, Player, GameConfig, Round, Vote, Song } from './types.js';
 import * as deezer from './deezer.js';
+import { createClient, type RedisClientType } from 'redis';
 
+let redisClient: RedisClientType | null = null;
 const rooms = new Map<string, Room>();
 const globalYearSongsCache = new Map<number, Song[]>();
+
+// Inicializar Redis si está disponible
+export async function initRedis(): Promise<void> {
+  const redisUrl = process.env.REDIS_URL;
+  if (redisUrl) {
+    try {
+      redisClient = createClient({ url: redisUrl });
+      await redisClient.connect();
+      console.log('Connected to Redis');
+    } catch (error) {
+      console.warn('Failed to connect to Redis, using in-memory storage:', error);
+      redisClient = null;
+    }
+  }
+}
+
+async function saveRoomToRedis(room: Room): Promise<void> {
+  if (!redisClient) return;
+  const key = `room:${room.id}`;
+  const serialized = JSON.stringify(room);
+  await redisClient.setEx(key, 4 * 60 * 60, serialized); // 4 hours TTL
+}
+
+// Función interna que guarda en Redis de forma async sin esperar
+function saveRoomAsync(room: Room): void {
+  saveRoomToRedis(room).catch(err => console.warn('Failed to save room to Redis:', err));
+}
+
+async function getRoomFromRedis(roomId: string): Promise<Room | null> {
+  if (!redisClient) return null;
+  const key = `room:${roomId}`;
+  const data = await redisClient.get(key);
+  if (data) {
+    const room = JSON.parse(data) as Room;
+    room.usedSongIds = new Set(room.usedSongIds as any);
+    return room;
+  }
+  return null;
+}
+
+async function deleteRoomFromRedis(roomId: string): Promise<void> {
+  if (!redisClient) return;
+  const key = `room:${roomId}`;
+  await redisClient.del(key);
+}
 
 function normalizeSongKey(song: Song): string {
   const normalizedTitle = song.name
@@ -70,13 +117,28 @@ export function createRoom(playerName: string, playerId: string, playerAvatar: n
   };
   
   rooms.set(roomId, room);
-  setTimeout(() => rooms.delete(roomId), 4 * 60 * 60 * 1000); // 4 horas
+  // Guardar en Redis en background (no esperar)
+  saveRoomToRedis(room).catch(err => console.warn('Failed to save room to Redis:', err));
   
   return room;
 }
 
 export function getRoom(roomId: string): Room | undefined {
   return rooms.get(roomId);
+}
+
+// Nueva función para obtener sala desde Redis si no existe en memoria
+export async function getRoomWithRedis(roomId: string): Promise<Room | undefined> {
+  let room = rooms.get(roomId);
+  if (room) return room;
+  
+  // Intentar cargar desde Redis
+  room = await getRoomFromRedis(roomId);
+  if (room) {
+    rooms.set(roomId, room);
+    return room;
+  }
+  return undefined;
 }
 
 export function joinRoom(roomId: string, playerName: string, playerId: string, playerAvatar: number): Room | null {
@@ -97,6 +159,9 @@ export function joinRoom(roomId: string, playerName: string, playerId: string, p
     avatar: playerAvatar,
   });
   
+  // Guardar en Redis en background
+  saveRoomToRedis(room).catch(err => console.warn('Failed to save room to Redis:', err));
+  
   return room;
 }
 
@@ -114,6 +179,9 @@ export function removePlayer(roomId: string, playerId: string): boolean {
   // Si no quedan jugadores, eliminar sala
   if (room.players.length === 0) {
     rooms.delete(roomId);
+    deleteRoomFromRedis(roomId).catch(err => console.warn('Failed to delete room from Redis:', err));
+  } else {
+    saveRoomAsync(room);
   }
   
   return true;
@@ -388,6 +456,7 @@ export async function startGame(
     }
     
     console.log(`[StartGame] SUCCESS - totalRounds is ${room.totalRounds}`);
+    saveRoomAsync(room);
     return true;
   } catch (error) {
     console.error(`[StartGame] FAILED with error:`, error);
@@ -504,6 +573,7 @@ export async function generateRound(roomId: string): Promise<Round | null> {
   };
   
   room.currentRound = round;
+  saveRoomAsync(room);
   console.log(`Created round ${roundNumber} with ${selectedSongs.length} songs`);
   return round;
 }
@@ -514,6 +584,7 @@ export function submitVote(roomId: string, playerId: string, songId: string): bo
   
   room.currentRound.votes = room.currentRound.votes.filter(v => v.playerId !== playerId);
   room.currentRound.votes.push({ playerId, songId });
+  saveRoomAsync(room);
   
   return true;
 }
@@ -523,6 +594,7 @@ export function togglePause(roomId: string): boolean {
   if (!room || !room.currentRound) return false;
   
   room.currentRound.isPaused = !room.currentRound.isPaused;
+  saveRoomAsync(room);
   return true;
 }
 
@@ -531,6 +603,7 @@ export function startTimer(roomId: string): boolean {
   if (!room || !room.currentRound) return false;
   
   room.currentRound.timerStarted = true;
+  saveRoomAsync(room);
   return true;
 }
 
@@ -551,6 +624,7 @@ export function resetGame(roomId: string): boolean {
   room.versusSongsOption2 = undefined;
   room.versusUsedIndices1 = undefined;
   room.versusUsedIndices2 = undefined;
+  saveRoomAsync(room);
   
   return true;
 }

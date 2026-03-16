@@ -45,6 +45,9 @@ app.get('/health', (req, res) => {
   res.json({ status: 'ok' });
 });
 
+// Inicializar Redis al arrancar
+gameManager.initRedis().catch(err => console.warn('Redis init failed:', err));
+
 io.on('connection', (socket) => {
   console.log('User connected:', socket.id);
 
@@ -55,7 +58,10 @@ io.on('connection', (socket) => {
     console.log(`Room created: ${room.id} by ${playerName}`);
   });
 
-  socket.on('join-room', ({ roomId, playerName, playerAvatar }) => {
+  socket.on('join-room', async ({ roomId, playerName, playerAvatar }) => {
+    // Intentar obtener la sala desde memoria o Redis
+    const loadedRoom = await gameManager.getRoomWithRedis(roomId);
+    
     const room = gameManager.joinRoom(roomId, playerName, socket.id, playerAvatar);
     if (room) {
       socket.join(roomId);
