@@ -11,11 +11,19 @@ const httpServer = createServer(app);
 
 const io = new Server(httpServer, {
   cors: {
-    origin: [
-      'https://save-or-eliminate.vercel.app',
-      'http://localhost:3000',
-      'http://localhost:5173',
-    ],
+    origin: (origin, callback) => {
+      const allowedOrigins = [
+        'https://save-or-eliminate.vercel.app',
+        'http://localhost:3000',
+        'http://localhost:5173',
+        'http://localhost:5174',
+      ];
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error('Not allowed by CORS'));
+      }
+    },
     methods: ['GET', 'POST'],
     credentials: true,
   },
@@ -27,6 +35,7 @@ app.use(cors({
     'https://save-or-eliminate.vercel.app',
     'http://localhost:3000',
     'http://localhost:5173',
+    'http://localhost:5174',
   ],
   credentials: true,
 }));
@@ -39,15 +48,15 @@ app.get('/health', (req, res) => {
 io.on('connection', (socket) => {
   console.log('User connected:', socket.id);
 
-  socket.on('create-room', ({ playerName }) => {
-    const room = gameManager.createRoom(playerName, socket.id);
+  socket.on('create-room', ({ playerName, playerAvatar }) => {
+    const room = gameManager.createRoom(playerName, socket.id, playerAvatar);
     socket.join(room.id);
     socket.emit('room-created', room);
     console.log(`Room created: ${room.id} by ${playerName}`);
   });
 
-  socket.on('join-room', ({ roomId, playerName }) => {
-    const room = gameManager.joinRoom(roomId, playerName, socket.id);
+  socket.on('join-room', ({ roomId, playerName, playerAvatar }) => {
+    const room = gameManager.joinRoom(roomId, playerName, socket.id, playerAvatar);
     if (room) {
       socket.join(roomId);
       socket.emit('room-joined', room);
@@ -59,7 +68,9 @@ io.on('connection', (socket) => {
   });
 
   socket.on('start-game', async ({ roomId, config }: { roomId: string; config: GameConfig }) => {
-    console.log('Starting game in room:', roomId, 'with config:', config);
+    console.log('=== START-GAME EVENT ===');
+    console.log('RoomId:', roomId);
+    console.log('Config received:', JSON.stringify(config, null, 2));
 
     // Emitir evento de carga inicial
     io.to(roomId).emit('game-loading', { loadedYears: 0, totalYears: config.selectionType === 'year' && config.yearRange
@@ -73,6 +84,7 @@ io.on('connection', (socket) => {
     });
 
     if (success) {
+      console.log('[start-game] StartGame returned success, generating first round...');
       const round = await gameManager.generateRound(roomId);
       if (round) {
         const room = gameManager.getRoom(roomId);
@@ -82,6 +94,7 @@ io.on('connection', (socket) => {
         const currentDecade = config.selectionType === 'decade' && config.decadeRange
           ? config.decadeRange.start
           : null;
+        console.log('[start-game] Emitting game-started with totalRounds:', room?.totalRounds);
         io.to(roomId).emit('game-started', { 
           round, 
           totalRounds: room?.totalRounds,
@@ -96,6 +109,7 @@ io.on('connection', (socket) => {
         io.to(roomId).emit('error', { message: 'Failed to generate first round' });
       }
     } else {
+      console.error('[start-game] StartGame FAILED');
       io.to(roomId).emit('game-error', { message: 'No se pudo iniciar la partida.' });
     }
   });
