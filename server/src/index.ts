@@ -13,9 +13,12 @@ const io = new Server(httpServer, {
   cors: {
     origin: "*",
     methods: ['GET', 'POST'],
-    credentials: false,
+    credentials: false
   },
   transports: ['websocket', 'polling'],
+  path: '/socket.io/',
+  pingTimeout: 60000,
+  pingInterval: 25000,
 });
 
 app.use(cors({
@@ -32,27 +35,59 @@ app.get('/health', (req, res) => {
 gameManager.initRedis().catch(err => console.warn('Redis init failed:', err));
 
 io.on('connection', (socket) => {
-  console.log('User connected:', socket.id);
+  console.log('[Socket] ✓ User connected:', socket.id);
 
-  socket.on('create-room', ({ playerName, playerAvatar }) => {
-    const room = gameManager.createRoom(playerName, socket.id, playerAvatar);
-    socket.join(room.id);
-    socket.emit('room-created', room);
-    console.log(`Room created: ${room.id} by ${playerName}`);
+  // Log de desconexión
+  socket.on('disconnect', (reason) => {
+    console.log('[Socket] ✗ User disconnected:', socket.id, 'Reason:', reason);
+    
+    const result = gameManager.findAndRemovePlayerFromAllRooms(socket.id);
+    if (result) {
+      const { roomId, room, playerName } = result;
+      
+      if (room.players.length > 0) {
+        // Notificar a los otros jugadores
+        io.to(roomId).emit('player-left', {
+          room: room,
+          message: `${playerName} se ha desconectado`
+        });
+      } else {
+        console.log(`[Socket] Room ${roomId} deleted (no players left)`);
+      }
+    }
   });
 
-  socket.on('join-room', async ({ roomId, playerName, playerAvatar }) => {
-    // Intentar obtener la sala desde memoria o Redis
-    const loadedRoom = await gameManager.getRoomWithRedis(roomId);
-    
-    const room = gameManager.joinRoom(roomId, playerName, socket.id, playerAvatar);
-    if (room) {
-      socket.join(roomId);
-      socket.emit('room-joined', room);
-      io.to(roomId).emit('player-joined', room);
-      console.log(`${playerName} joined room ${roomId}`);
-    } else {
-      socket.emit('error', { message: 'La sala no fue encontrada o está llena' });
+  // Log de errores
+  socket.on('error', (error) => {
+    console.error('[Socket] Error from client:', socket.id, error);
+  });
+
+  socket.on('create-room', ({ playerName, playerAvatar }) => {
+    try {
+      const room = gameManager.createRoom(playerName, socket.id, playerAvatar);
+      socket.join(room.id);
+      socket.emit('room-created', room);
+      console.log(`[Socket] Room created: ${room.id} by ${playerName}`);
+    } catch (err) {
+      console.error('[Socket] Error in create-room:', err);
+      socket.emit('error', { message: 'Error creating room' });
+    }
+  });
+
+  socket.on('join-room', ({ roomId, playerName, playerAvatar }) => {
+    try {
+      const room = gameManager.joinRoom(roomId, playerName, socket.id, playerAvatar);
+      if (room) {
+        socket.join(roomId);
+        socket.emit('room-joined', room);
+        io.to(roomId).emit('player-joined', room);
+        console.log(`[Socket] ${playerName} joined room ${roomId}`);
+      } else {
+        socket.emit('error', { message: 'La sala no fue encontrada o está llena' });
+      }
+    } catch (err) {
+      console.error('[Socket] Error in join-room:', err);
+      socket.emit('error', { message: 'Error joining room' });
     }
   });
 
@@ -181,25 +216,6 @@ io.on('connection', (socket) => {
   socket.on('search-genres', async ({ query }, callback) => {
     const genres = await deezer.searchGenres(query);
     callback(genres);
-  });
-
-  socket.on('disconnect', () => {
-    console.log('User disconnected:', socket.id);
-    
-    const result = gameManager.findAndRemovePlayerFromAllRooms(socket.id);
-    if (result) {
-      const { roomId, room, playerName } = result;
-      
-      if (room.players.length > 0) {
-        // Notificar a los otros jugadores
-        io.to(roomId).emit('player-left', {
-          room: room,
-          message: `${playerName} se ha desconectado`
-        });
-      } else {
-        console.log(`Room ${roomId} deleted (no players left)`);
-      }
-    }
   });
 });
 
