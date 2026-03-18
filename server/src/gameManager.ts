@@ -524,23 +524,34 @@ export async function generateRound(roomId: string): Promise<Round | null> {
   }
   // Para year mode, obtener SOLO las canciones del año actual de esa ronda
   else if (selectionType === 'year' && yearRange) {
-    const currentYear = yearRange.start + (roundNumber - 1);
-    if (currentYear > yearRange.end) {
-      console.log(`End of year range. Current year ${currentYear} exceeds end ${yearRange.end}`);
-      return null; // Ya pasamos el rango de años
+    if (room.currentYearIndex === undefined) {
+      room.currentYearIndex = 0;
     }
-    console.log(`[Ronda ${roundNumber}] Fetching songs for year ${currentYear}...`);
-    const availableSongs = await deezer.searchByYear(currentYear, 100);
-    console.log(`[Ronda ${roundNumber}] Got ${availableSongs.length} songs for year ${currentYear}`);
-    
-    if (availableSongs.length < songsPerRound) {
-      console.log(`Not enough songs: ${availableSongs.length} < ${songsPerRound}`);
+
+    const totalYears = yearRange.end - yearRange.start + 1;
+    let foundRoundSongs = false;
+
+    while ((room.currentYearIndex ?? 0) < totalYears && !foundRoundSongs) {
+      const currentYear = yearRange.start + (room.currentYearIndex ?? 0);
+      console.log(`[Ronda ${roundNumber}] Loading songs for year ${currentYear}...`);
+
+      const pool = await ensureYearSongsLoaded(room, currentYear);
+      console.log(`[Ronda ${roundNumber}] Year ${currentYear} has ${pool.length} songs with preview`);
+
+      room.currentYearIndex = (room.currentYearIndex ?? 0) + 1;
+
+      if (pool.length >= songsPerRound) {
+        const shuffled = [...pool].sort(() => Math.random() - 0.5);
+        selectedSongs = shuffled.slice(0, songsPerRound);
+        foundRoundSongs = true;
+      }
+    }
+
+    if (!foundRoundSongs) {
+      console.log(`[Ronda ${roundNumber}] No playable years left with at least ${songsPerRound} songs`);
       return null;
     }
-    
-    const shuffled = [...availableSongs].sort(() => Math.random() - 0.5);
-    selectedSongs = shuffled.slice(0, songsPerRound);
-  } 
+  }
   // Para decade mode, obtener SOLO las canciones de la década actual de esa ronda
   else if (selectionType === 'decade' && decadeRange) {
     const currentDecade = decadeRange.start + (roundNumber - 1) * 10;

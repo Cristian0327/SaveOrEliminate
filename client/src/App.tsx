@@ -153,8 +153,8 @@ function App() {
       setCurrentScreen('lobby');
     });
 
-    socket.on('previews-ready', () => {
-      console.log('[App] Previews ready event received');
+    socket.on('previews-started', () => {
+      console.log('[App] Previews started event received');
     });
 
     socket.on('voting-started', ({ round, votes }: { round: Round; votes: Vote[] }) => {
@@ -183,7 +183,7 @@ function App() {
       socket.off('new-round');
       socket.off('game-finished');
       socket.off('game-reset');
-      socket.off('previews-ready');
+      socket.off('previews-started');
       socket.off('voting-started');
       socket.off('error');
     };

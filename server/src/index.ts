@@ -160,7 +160,9 @@ io.on('connection', (socket) => {
         console.log(`Game started in room ${roomId}, round 1/${room?.totalRounds}`);
       } else {
         console.error(`Failed to generate first round in room ${roomId}`);
-        io.to(roomId).emit('error', { message: 'Failed to generate first round' });
+        io.to(roomId).emit('game-error', {
+          message: 'No se pudieron cargar canciones para iniciar la partida. Prueba otro artista/genero/rango.'
+        });
       }
     } else {
       console.error('[start-game] StartGame FAILED');
