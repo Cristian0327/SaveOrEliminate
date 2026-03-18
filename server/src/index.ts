@@ -36,20 +36,26 @@ gameManager.initRedis().catch(err => console.warn('Redis init failed:', err));
 
 io.on('connection', (socket) => {
   console.log('[Socket] ✓ User connected:', socket.id);
+  console.log('[Socket] Total connected clients:', io.engine.clientsCount);
 
   // Enviar ping al cliente para mantener viva la conexión
   const pingInterval = setInterval(() => {
-    socket.emit('ping');
+    try {
+      socket.emit('ping');
+    } catch (err) {
+      console.error('[Socket] Error emitting ping:', err);
+    }
   }, 25000);
 
   // Canal para que el cliente responda pongs
   socket.on('pong', () => {
-    // Cliente respondió
+    console.log('[Socket] Pong received from', socket.id);
   });
 
   // Log de desconexión
   socket.on('disconnect', (reason) => {
     console.log('[Socket] ✗ User disconnected:', socket.id, 'Reason:', reason);
+    console.log('[Socket] Remaining clients:', io.engine.clientsCount);
     clearInterval(pingInterval);
     
     const result = gameManager.findAndRemovePlayerFromAllRooms(socket.id);
@@ -68,9 +74,13 @@ io.on('connection', (socket) => {
     }
   });
 
-  // Log de errores
+  // Log de errores CON DETALLE
   socket.on('error', (error) => {
     console.error('[Socket] Error from client:', socket.id, error);
+  });
+
+  socket.on('connect_error', (error: any) => {
+    console.error('[Socket] Connection error for client:', socket.id, error.message);
   });
 
   socket.on('create-room', ({ playerName, playerAvatar }) => {
