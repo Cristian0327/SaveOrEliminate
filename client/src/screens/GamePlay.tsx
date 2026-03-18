@@ -271,12 +271,17 @@ export default function GamePlay({ round, totalRounds, roomId, isHost, gameMode,
   };
 
   const handleStartVoting = () => {
+    console.log('[GamePlay] VOTING START - Emitiendo start-voting para sala:', roomId);
     if (audioRef.current) {
       audioRef.current.pause();
       audioRef.current.currentTime = 0;
     }
     setPlayingPreviewId(null);
     socket.emit('start-voting', { roomId });
+    // Cambiar estado inmediatamente para que comience votación
+    setVotingStarted(true);
+    setShowingPreview(false);
+    console.log('[GamePlay] ✓ Evento start-voting emitido, votingStarted activado');
   };
 
   return (
@@ -320,7 +325,15 @@ export default function GamePlay({ round, totalRounds, roomId, isHost, gameMode,
           {isHost ? (
             <button 
               className="primary" 
-              onClick={() => socket.emit('start-previews', { roomId })}
+              onClick={() => {
+                console.log('[GamePlay] CLICK BUTTON - Emitiendo start-previews para sala:', roomId);
+                console.log('[GamePlay] Socket conectado?', socket.connected);
+                socket.emit('start-previews', { roomId });
+                console.log('[GamePlay] ✓ Evento start-previews emitido');
+                // Cambiar estado inmediatamente para que comience a mostrar previews
+                setPreviewsStarted(true);
+                setCurrentPreviewIndex(0);
+              }}
               style={{ fontSize: 'clamp(0.9rem, 3vw, 1rem)', padding: 'clamp(0.8rem, 2vw, 1.2rem) clamp(1.5rem, 4vw, 2rem)', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 'clamp(0.3rem, 1vw, 0.5rem)', margin: '0 auto' }}
             >
               <Music size={20} /> Comenzar Previews

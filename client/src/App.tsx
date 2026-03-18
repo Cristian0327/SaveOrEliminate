@@ -153,6 +153,18 @@ function App() {
       setCurrentScreen('lobby');
     });
 
+    socket.on('previews-ready', () => {
+      console.log('[App] Previews ready event received');
+    });
+
+    socket.on('voting-started', ({ round, votes }: { round: Round; votes: Vote[] }) => {
+      console.log('[App] Voting started event received');
+      if (round) {
+        setCurrentRound(round);
+        setVotes(votes);
+      }
+    });
+
     socket.on('error', ({ message }: { message: string }) => {
       setErrorMessage(message);
     });
@@ -171,6 +183,8 @@ function App() {
       socket.off('new-round');
       socket.off('game-finished');
       socket.off('game-reset');
+      socket.off('previews-ready');
+      socket.off('voting-started');
       socket.off('error');
     };
   }, []);
