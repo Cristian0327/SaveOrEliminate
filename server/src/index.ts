@@ -11,33 +11,16 @@ const httpServer = createServer(app);
 
 const io = new Server(httpServer, {
   cors: {
-    origin: (origin, callback) => {
-      const allowedOrigins = [
-        'https://save-or-eliminate.vercel.app',
-        'http://localhost:3000',
-        'http://localhost:5173',
-        'http://localhost:5174',
-      ];
-      if (!origin || allowedOrigins.includes(origin)) {
-        callback(null, true);
-      } else {
-        callback(new Error('Not allowed by CORS'));
-      }
-    },
+    origin: "*",
     methods: ['GET', 'POST'],
-    credentials: true,
+    credentials: false,
   },
   transports: ['websocket', 'polling'],
 });
 
 app.use(cors({
-  origin: [
-    'https://save-or-eliminate.vercel.app',
-    'http://localhost:3000',
-    'http://localhost:5173',
-    'http://localhost:5174',
-  ],
-  credentials: true,
+  origin: "*",
+  credentials: false,
 }));
 app.use(express.json());
 
