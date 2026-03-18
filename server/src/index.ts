@@ -150,16 +150,6 @@ io.on('connection', (socket) => {
   });
 
 
-  socket.on('start-previews', ({ roomId }) => {
-    console.log(`[Socket] start-previews in room ${roomId}`);
-    io.to(roomId).emit('previews-started');
-  });
-
-  socket.on('start-voting', ({ roomId }) => {
-    console.log(`[Socket] start-voting in room ${roomId}`);
-    io.to(roomId).emit('voting-started');
-  });
-
   socket.on('start-timer', ({ roomId }) => {
     gameManager.startTimer(roomId);
     io.to(roomId).emit('timer-started');
@@ -205,6 +195,22 @@ io.on('connection', (socket) => {
     } else {
       io.to(roomId).emit('game-finished');
       console.log(`Game finished in room ${roomId}`);
+    }
+  });
+
+  socket.on('start-previews', ({ roomId }) => {
+    console.log(`[start-previews] Starting previews in room ${roomId}`);
+    io.to(roomId).emit('previews-ready');
+  });
+
+  socket.on('start-voting', ({ roomId }) => {
+    console.log(`[start-voting] Starting voting in room ${roomId}`);
+    const room = gameManager.getRoom(roomId);
+    if (room?.currentRound) {
+      io.to(roomId).emit('voting-started', {
+        round: room.currentRound,
+        votes: room.currentRound.votes
+      });
     }
   });
 
