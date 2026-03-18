@@ -268,23 +268,43 @@ io.on('connection', (socket) => {
   });
 
   socket.on('get-top-artists', async (callback) => {
-    const artists = await deezer.getTopArtists();
-    callback(artists);
+    try {
+      const artists = await deezer.getTopArtists();
+      callback(Array.isArray(artists) ? artists : []);
+    } catch (error) {
+      console.error('[Socket] get-top-artists failed:', error);
+      callback([]);
+    }
   });
 
   socket.on('get-top-genres', async (callback) => {
-    const genres = await deezer.getTopGenres();
-    callback(genres);
+    try {
+      const genres = await deezer.getTopGenres();
+      callback(Array.isArray(genres) ? genres : []);
+    } catch (error) {
+      console.error('[Socket] get-top-genres failed:', error);
+      callback([]);
+    }
   });
 
   socket.on('search-artists', async ({ query }, callback) => {
-    const artists = await deezer.searchArtists(query);
-    callback(artists);
+    try {
+      const artists = await deezer.searchArtists(query);
+      callback(Array.isArray(artists) ? artists : []);
+    } catch (error) {
+      console.error('[Socket] search-artists failed:', error);
+      callback([]);
+    }
   });
 
   socket.on('search-genres', async ({ query }, callback) => {
-    const genres = await deezer.searchGenres(query);
-    callback(genres);
+    try {
+      const genres = await deezer.searchGenres(query);
+      callback(Array.isArray(genres) ? genres : []);
+    } catch (error) {
+      console.error('[Socket] search-genres failed:', error);
+      callback([]);
+    }
   });
 });
 

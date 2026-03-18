@@ -11,18 +11,42 @@ export default function GenreSelect({ onSelect, onBack }: GenreSelectProps) {
   const [topGenres, setTopGenres] = useState<string[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [searchResults, setSearchResults] = useState<string[]>([]);
+  const [isLoadingTopGenres, setIsLoadingTopGenres] = useState(true);
 
   useEffect(() => {
+    let cancelled = false;
+    const timeout = setTimeout(() => {
+      if (!cancelled) {
+        console.warn('[GenreSelect] get-top-genres timeout');
+        setIsLoadingTopGenres(false);
+      }
+    }, 8000);
+
     socket.emit('get-top-genres', (genres: string[]) => {
-      setTopGenres(genres);
+      if (cancelled) return;
+      clearTimeout(timeout);
+      setTopGenres(Array.isArray(genres) ? genres : []);
+      setIsLoadingTopGenres(false);
     });
+
+    return () => {
+      cancelled = true;
+      clearTimeout(timeout);
+    };
   }, []);
 
   // Búsqueda en tiempo real
   useEffect(() => {
     if (searchQuery) {
+      let finished = false;
+      const timeout = setTimeout(() => {
+        if (!finished) setSearchResults([]);
+      }, 8000);
+
       socket.emit('search-genres', { query: searchQuery }, (results: string[]) => {
-        setSearchResults(results);
+        finished = true;
+        clearTimeout(timeout);
+        setSearchResults(Array.isArray(results) ? results : []);
       });
     } else {
       setSearchResults([]);
@@ -93,7 +117,7 @@ export default function GenreSelect({ onSelect, onBack }: GenreSelectProps) {
           </>
         ) : (
           <p style={{ opacity: 0.7, textAlign: 'center' }}>
-            {searchQuery ? 'No se encontraron géneros' : 'Cargando...'}
+            {searchQuery ? 'No se encontraron géneros' : (isLoadingTopGenres ? 'Cargando...' : 'No se pudieron cargar géneros. Intenta buscar manualmente.')}
           </p>
         )}
       </div>

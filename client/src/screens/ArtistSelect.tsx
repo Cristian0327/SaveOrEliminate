@@ -17,11 +17,28 @@ export default function ArtistSelect({ onSelect, onBack }: ArtistSelectProps) {
   const [searchQuery, setSearchQuery] = useState('');
   const [searchResults, setSearchResults] = useState<Artist[]>([]);
   const [isSearching, setIsSearching] = useState(false);
+  const [isLoadingTopArtists, setIsLoadingTopArtists] = useState(true);
 
   useEffect(() => {
+    let cancelled = false;
+    const timeout = setTimeout(() => {
+      if (!cancelled) {
+        console.warn('[ArtistSelect] get-top-artists timeout');
+        setIsLoadingTopArtists(false);
+      }
+    }, 8000);
+
     socket.emit('get-top-artists', (artists: Artist[]) => {
-      setTopArtists(artists);
+      if (cancelled) return;
+      clearTimeout(timeout);
+      setTopArtists(Array.isArray(artists) ? artists : []);
+      setIsLoadingTopArtists(false);
     });
+
+    return () => {
+      cancelled = true;
+      clearTimeout(timeout);
+    };
   }, []);
 
   // Búsqueda en tiempo real
@@ -29,8 +46,17 @@ export default function ArtistSelect({ onSelect, onBack }: ArtistSelectProps) {
     if (searchQuery.length >= 2) {
       setIsSearching(true);
       const timeout = setTimeout(() => {
+        let finished = false;
+        const responseTimeout = setTimeout(() => {
+          if (!finished) {
+            setIsSearching(false);
+          }
+        }, 8000);
+
         socket.emit('search-artists', { query: searchQuery }, (results: Artist[]) => {
-          setSearchResults(results);
+          finished = true;
+          clearTimeout(responseTimeout);
+          setSearchResults(Array.isArray(results) ? results : []);
           setIsSearching(false);
         });
       }, 500); // Debounce de 500ms
@@ -131,7 +157,7 @@ export default function ArtistSelect({ onSelect, onBack }: ArtistSelectProps) {
           </>
         ) : (
           <p style={{ opacity: 0.7, textAlign: 'center', fontSize: 'clamp(0.85rem, 2vw, 1rem)' }}>
-            {searchQuery.length >= 2 ? 'No se encontraron artistas' : 'Cargando...'}
+            {searchQuery.length >= 2 ? 'No se encontraron artistas' : (isLoadingTopArtists ? 'Cargando...' : 'No se pudieron cargar artistas. Intenta buscar manualmente.')}
           </p>
         )}
       </div>
