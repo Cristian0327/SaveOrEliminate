@@ -125,32 +125,6 @@ export default function GamePlay({ round, totalRounds, roomId, isHost, gameMode,
     setPlayingPreviewId(null);
   }, [round.roundNumber]);
 
-  // Escuchar eventos de previews y votación desde el servidor
-  useEffect(() => {
-    const handlePreviewsStarted = () => {
-      console.log('[GamePlay] Server: previews-started event received');
-      setCurrentPreviewIndex(0);
-      setPreviewsStarted(true);
-      setShowingPreview(true);
-    };
-
-    const handleVotingStarted = () => {
-      console.log('[GamePlay] Server: voting-started event received');
-      setShowingPreview(false);
-      setPreviewsPlayed(true);
-      setVotingStarted(true);
-      setTimer(10);
-    };
-
-    socket.on('previews-started', handlePreviewsStarted);
-    socket.on('voting-started', handleVotingStarted);
-
-    return () => {
-      socket.off('previews-started', handlePreviewsStarted);
-      socket.off('voting-started', handleVotingStarted);
-    };
-  }, []);
-
   // Auto-play previews de 10 segundos
   useEffect(() => {
     let cleanupFn: (() => void) | undefined;

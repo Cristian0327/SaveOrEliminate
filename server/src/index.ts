@@ -200,16 +200,6 @@ io.on('connection', (socket) => {
     callback(genres);
   });
 
-  socket.on('start-previews', ({ roomId }) => {
-    console.log(`Host starting previews in room ${roomId}`);
-    io.to(roomId).emit('previews-started');
-  });
-
-  socket.on('start-voting', ({ roomId }) => {
-    console.log(`Starting voting in room ${roomId}`);
-    io.to(roomId).emit('voting-started');
-  });
-
   socket.on('disconnect', () => {
     console.log('User disconnected:', socket.id);
     
