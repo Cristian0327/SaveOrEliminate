@@ -9,20 +9,15 @@ const getServerUrl = () => {
                        !window.location.hostname.includes('192.168');
   
   if (isProduction) {
-    // En producción: usar VITE_API_URL o fallback a Render
-    const apiUrl = (import.meta as any).env.VITE_API_URL || 'https://save-or-eliminate-server.onrender.com';
-    console.log('[Socket] Production mode - API URL:', apiUrl);
-    return apiUrl;
+    // En producción: conectar a Render
+    return 'https://saveoreliminate.onrender.com';
   }
   
   // En desarrollo: conecta a localhost:3001
-  const url = `http://localhost:3001`;
-  console.log('[Socket] Development mode - connecting to:', url);
-  return url;
+  return `http://localhost:3001`;
 };
 
 const serverUrl = getServerUrl();
-console.log('[Socket] Final URL:', serverUrl);
 
 export const socket: Socket = io(serverUrl, {
   autoConnect: true,
@@ -30,5 +25,18 @@ export const socket: Socket = io(serverUrl, {
   reconnectionDelay: 1000,
   reconnectionDelayMax: 10000,
   reconnectionAttempts: Infinity,
-  transports: ['websocket', 'polling']
+  transports: ['websocket', 'polling'],
+});
+
+// Eventos de debug
+socket.on('connect', () => {
+  console.log('[Socket] ✓ Conectado al servidor:', serverUrl);
+});
+
+socket.on('connect_error', (error) => {
+  console.error('[Socket] ✗ Error de conexión:', error.message);
+});
+
+socket.on('disconnect', (reason) => {
+  console.warn('[Socket] Desconectado:', reason);
 });
