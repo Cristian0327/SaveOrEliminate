@@ -17,8 +17,6 @@ const io = new Server(httpServer, {
         'http://localhost:3000',
         'http://localhost:5173',
         'http://localhost:5174',
-        'http://192.168.1.50:5173',
-        'http://192.168.1.50:3001',
       ];
       if (!origin || allowedOrigins.includes(origin)) {
         callback(null, true);
@@ -38,8 +36,6 @@ app.use(cors({
     'http://localhost:3000',
     'http://localhost:5173',
     'http://localhost:5174',
-    'http://192.168.1.50:5173',
-    'http://192.168.1.50:3001',
   ],
   credentials: true,
 }));
@@ -48,6 +44,9 @@ app.use(express.json());
 app.get('/health', (req, res) => {
   res.json({ status: 'ok' });
 });
+
+// Inicializar Redis al arrancar
+gameManager.initRedis().catch(err => console.warn('Redis init failed:', err));
 
 io.on('connection', (socket) => {
   console.log('User connected:', socket.id);
@@ -59,7 +58,10 @@ io.on('connection', (socket) => {
     console.log(`Room created: ${room.id} by ${playerName}`);
   });
 
-  socket.on('join-room', ({ roomId, playerName, playerAvatar }) => {
+  socket.on('join-room', async ({ roomId, playerName, playerAvatar }) => {
+    // Intentar obtener la sala desde memoria o Redis
+    const loadedRoom = await gameManager.getRoomWithRedis(roomId);
+    
     const room = gameManager.joinRoom(roomId, playerName, socket.id, playerAvatar);
     if (room) {
       socket.join(roomId);
@@ -77,11 +79,10 @@ io.on('connection', (socket) => {
     console.log('Config received:', JSON.stringify(config, null, 2));
 
     // Emitir evento de carga inicial
-    let totalYears = 1; // Por defecto 1 para otros modos (genre, artist, etc)
-    if (config.selectionType === 'year' && config.yearRange) {
-      totalYears = config.yearRange.end - config.yearRange.start + 1;
-    }
-    io.to(roomId).emit('game-loading', { loadedYears: 0, totalYears });
+    io.to(roomId).emit('game-loading', { loadedYears: 0, totalYears: config.selectionType === 'year' && config.yearRange
+      ? config.yearRange.end - config.yearRange.start + 1
+      : 0
+    });
 
     const success = await gameManager.startGame(roomId, config, (loadedYears, totalYears) => {
       // Emitir progreso de carga año a año
@@ -123,17 +124,6 @@ io.on('connection', (socket) => {
   socket.on('start-timer', ({ roomId }) => {
     gameManager.startTimer(roomId);
     io.to(roomId).emit('timer-started');
-  });
-
-  socket.on('start-previews', ({ roomId }) => {
-    console.log(`[start-previews] Host starting previews in room ${roomId}`);
-    io.to(roomId).emit('previews-started');
-  });
-
-  socket.on('start-voting', ({ roomId }) => {
-    console.log(`[start-voting] Host starting voting in room ${roomId}`);
-    gameManager.startTimer(roomId);
-    io.to(roomId).emit('voting-started');
   });
 
   socket.on('toggle-pause', ({ roomId }) => {
@@ -210,6 +200,16 @@ io.on('connection', (socket) => {
     callback(genres);
   });
 
+  socket.on('start-previews', ({ roomId }) => {
+    console.log(`Host starting previews in room ${roomId}`);
+    io.to(roomId).emit('previews-started');
+  });
+
+  socket.on('start-voting', ({ roomId }) => {
+    console.log(`Starting voting in room ${roomId}`);
+    io.to(roomId).emit('voting-started');
+  });
+
   socket.on('disconnect', () => {
     console.log('User disconnected:', socket.id);
     
@@ -230,8 +230,7 @@ io.on('connection', (socket) => {
   });
 });
 
-const PORT = parseInt(process.env.PORT || '3001', 10);
-httpServer.listen(PORT, '0.0.0.0', () => {
-  console.log(`Server running on http://0.0.0.0:${PORT}`);
-  console.log(`Accessible locally at http://192.168.1.50:${PORT}`);
+const PORT = process.env.PORT || 3001;
+httpServer.listen(PORT, () => {
+  console.log(`Server running on http://localhost:${PORT}`);
 });
