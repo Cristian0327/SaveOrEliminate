@@ -38,11 +38,8 @@ function createSimpleAudio(audioElement: HTMLAudioElement) {
           })
           .catch(err => {
             console.error(`[Audio] Error playing:`, err);
-            if (onComplete && !hasCompleted) {
-              hasCompleted = true;
-              console.log(`[Audio] Calling onComplete due to error`);
-              onComplete();
-            }
+            // Do not auto-advance immediately on autoplay errors.
+            // The 10s timeout below keeps progression consistent across clients.
           });
       }
 
@@ -210,10 +207,14 @@ export default function GamePlay({ round, totalRounds, roomId, isHost, gameMode,
       console.log('[GamePlay] Previews started event received, round:', round.roundNumber, 'songs:', round.songs.length);
       setPreviewsStarted(true);
       setCurrentPreviewIndex(0); // Pasar de -1 a 0 para comenzar la reproducción
+      setShowingPreview(true);
+      setVotingStarted(false);
     };
 
     const handleVotingStarted = () => {
       console.log('[GamePlay] Voting started event received');
+      setShowingPreview(false);
+      setPreviewsPlayed(true);
       setVotingStarted(true);
     };
 
@@ -438,9 +439,9 @@ export default function GamePlay({ round, totalRounds, roomId, isHost, gameMode,
                 <div
                   key={song.id}
                   className={`song-card ${isSelected ? 'selected' : ''}`}
-                  onClick={() => votingStarted && previewsPlayed ? handleSongSelect(song.id) : null}
+                  onClick={() => votingStarted ? handleSongSelect(song.id) : null}
                   onMouseEnter={(e) => {
-                    if (votingStarted && previewsPlayed) {
+                    if (votingStarted) {
                       const target = e.currentTarget as HTMLElement;
                       const imgElement = target.querySelector('img') as HTMLImageElement;
                       if (imgElement) {
@@ -460,8 +461,8 @@ export default function GamePlay({ round, totalRounds, roomId, isHost, gameMode,
                     target.style.transform = isSelected ? 'scale(1.05)' : 'translateY(0)';
                   }}
                   style={{ 
-                    cursor: votingStarted && previewsPlayed ? 'pointer' : 'default', 
-                    opacity: previewsPlayed ? 1 : 0.5,
+                    cursor: votingStarted ? 'pointer' : 'default', 
+                    opacity: votingStarted || previewsPlayed ? 1 : 0.5,
                     position: 'relative',
                   }}
                 >
