@@ -36,6 +36,10 @@ gameManager.initRedis().catch(err => console.warn('Redis init failed:', err));
 
 const pendingDisconnectCleanup = new Map<string, NodeJS.Timeout>();
 
+function sleep(ms: number): Promise<void> {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
 io.on('connection', (socket) => {
   console.log('[Socket] ✓ User connected:', socket.id);
   console.log('[Socket] Total connected clients:', io.engine.clientsCount);
@@ -105,7 +109,24 @@ io.on('connection', (socket) => {
   socket.on('join-room', async ({ roomId, playerName, playerAvatar }) => {
     try {
       const normalizedRoomId = String(roomId ?? '').trim().toUpperCase();
-      await gameManager.getRoomWithRedis(normalizedRoomId);
+
+      // Retry breve para evitar falsos "no encontrada" por carreras/reconexiones
+      let roomSnapshot = await gameManager.getRoomWithRedis(normalizedRoomId);
+      for (let attempt = 0; !roomSnapshot && attempt < 5; attempt += 1) {
+        await sleep(400);
+        roomSnapshot = await gameManager.getRoomWithRedis(normalizedRoomId);
+      }
+
+      if (!roomSnapshot) {
+        socket.emit('error', { message: 'La sala no existe o expiró. Pídele al host crear una nueva.' });
+        return;
+      }
+
+      if (roomSnapshot.players.length >= 8) {
+        socket.emit('error', { message: 'La sala está llena (máximo 8 jugadores).' });
+        return;
+      }
+
       const room = gameManager.joinRoom(normalizedRoomId, playerName, socket.id, playerAvatar);
       if (room) {
         socket.join(normalizedRoomId);
@@ -113,7 +134,7 @@ io.on('connection', (socket) => {
         io.to(normalizedRoomId).emit('player-joined', room);
         console.log(`[Socket] ${playerName} joined room ${normalizedRoomId}`);
       } else {
-        socket.emit('error', { message: 'La sala no fue encontrada o está llena' });
+        socket.emit('error', { message: 'No se pudo unir a la sala. Intenta nuevamente.' });
       }
     } catch (err) {
       console.error('[Socket] Error in join-room:', err);
