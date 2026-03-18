@@ -34,6 +34,8 @@ app.get('/health', (req, res) => {
 // Inicializar Redis al arrancar
 gameManager.initRedis().catch(err => console.warn('Redis init failed:', err));
 
+const pendingDisconnectCleanup = new Map<string, NodeJS.Timeout>();
+
 io.on('connection', (socket) => {
   console.log('[Socket] ✓ User connected:', socket.id);
   console.log('[Socket] Total connected clients:', io.engine.clientsCount);
@@ -57,21 +59,26 @@ io.on('connection', (socket) => {
     console.log('[Socket] ✗ User disconnected:', socket.id, 'Reason:', reason);
     console.log('[Socket] Remaining clients:', io.engine.clientsCount);
     clearInterval(pingInterval);
-    
-    const result = gameManager.findAndRemovePlayerFromAllRooms(socket.id);
-    if (result) {
-      const { roomId, room, playerName } = result;
-      
-      if (room.players.length > 0) {
-        // Notificar a los otros jugadores
-        io.to(roomId).emit('player-left', {
-          room: room,
-          message: `${playerName} se ha desconectado`
-        });
-      } else {
-        console.log(`[Socket] Room ${roomId} deleted (no players left)`);
+
+    // Grace period para reconexiones rápidas (evita borrar sala por cortes breves)
+    const timeout = setTimeout(() => {
+      pendingDisconnectCleanup.delete(socket.id);
+      const result = gameManager.findAndRemovePlayerFromAllRooms(socket.id);
+      if (result) {
+        const { roomId, room, playerName } = result;
+
+        if (room.players.length > 0) {
+          io.to(roomId).emit('player-left', {
+            room: room,
+            message: `${playerName} se ha desconectado`,
+          });
+        } else {
+          console.log(`[Socket] Room ${roomId} deleted (no players left)`);
+        }
       }
-    }
+    }, 45000);
+
+    pendingDisconnectCleanup.set(socket.id, timeout);
   });
 
   // Log de errores CON DETALLE

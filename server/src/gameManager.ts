@@ -144,13 +144,25 @@ export async function getRoomWithRedis(roomId: string): Promise<Room | undefined
 export function joinRoom(roomId: string, playerName: string, playerId: string, playerAvatar: number): Room | null {
   const room = rooms.get(roomId);
   if (!room) return null;
-  
-  // Limitar a 8 jugadores
-  if (room.players.length >= 8) return null;
-  
-  // Verificar que no exista ya
+
+  // Verificar si ya existe por socket id
   const existingPlayer = room.players.find(p => p.id === playerId);
   if (existingPlayer) return room;
+
+  // Si reconecta con el mismo nombre, recuperar su lugar (manteniendo host si aplica)
+  const normalizedName = playerName.trim().toLowerCase();
+  const existingByName = room.players.find(
+    p => p.name.trim().toLowerCase() === normalizedName,
+  );
+  if (existingByName) {
+    existingByName.id = playerId;
+    existingByName.avatar = playerAvatar;
+    saveRoomAsync(room);
+    return room;
+  }
+
+  // Limitar a 8 jugadores para nuevos ingresos
+  if (room.players.length >= 8) return null;
   
   room.players.push({
     id: playerId,
@@ -160,7 +172,7 @@ export function joinRoom(roomId: string, playerName: string, playerId: string, p
   });
   
   // Guardar en Redis en background
-  saveRoomToRedis(room).catch(err => console.warn('Failed to save room to Redis:', err));
+  saveRoomAsync(room);
   
   return room;
 }
