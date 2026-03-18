@@ -37,9 +37,20 @@ gameManager.initRedis().catch(err => console.warn('Redis init failed:', err));
 io.on('connection', (socket) => {
   console.log('[Socket] ✓ User connected:', socket.id);
 
+  // Enviar ping al cliente para mantener viva la conexión
+  const pingInterval = setInterval(() => {
+    socket.emit('ping');
+  }, 25000);
+
+  // Canal para que el cliente responda pongs
+  socket.on('pong', () => {
+    // Cliente respondió
+  });
+
   // Log de desconexión
   socket.on('disconnect', (reason) => {
     console.log('[Socket] ✗ User disconnected:', socket.id, 'Reason:', reason);
+    clearInterval(pingInterval);
     
     const result = gameManager.findAndRemovePlayerFromAllRooms(socket.id);
     if (result) {
