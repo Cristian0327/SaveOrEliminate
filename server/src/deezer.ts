@@ -1085,30 +1085,52 @@ export async function getTopArtists(limit: number = 20): Promise<Array<{name: st
   ];
 
   try {
-    // Buscar imagen para cada artista en Deezer
-    const artists = await Promise.all(
-      artistNames.slice(0, limit).map(async (name) => {
+    const selectedNames = artistNames.slice(0, limit);
+    
+    // Crear un Promise que intenta cargar imágenes con timeout de 3s
+    const loadImagesPromise = (async () => {
+      const artists: Array<{name: string; image: string}> = [];
+      
+      // Cargar imágenes secuencialmente CON TIMEOUT por artista
+      for (const name of selectedNames) {
         try {
-          const response = await axios.get(`${DEEZER_API}/search/artist`, {
-            params: { q: name, limit: 1 }
-          });
+          const response: any = await Promise.race([
+            axios.get(`${DEEZER_API}/search/artist`, {
+              params: { q: name, limit: 1 }
+            }),
+            new Promise((_, reject) => setTimeout(() => reject(new Error('timeout')), 1500))
+          ]);
           
-          if (response.data.data && response.data.data.length > 0) {
+          if (response.data && response.data.data && response.data.data.length > 0) {
             const artist = response.data.data[0];
-            return {
+            artists.push({
               name: name,
               image: artist.picture_medium || artist.picture || artist.picture_small || ''
-            };
+            });
+          } else {
+            artists.push({ name: name, image: '' });
           }
         } catch (err) {
-          // Ignorar errores individuales y devolver sin imagen
+          // Timeout o error: agregar sin imagen
+          artists.push({ name: name, image: '' });
         }
-        
-        return { name: name, image: '' };
+      }
+      
+      return artists;
+    })();
+    
+    // Race: devuelve con imágenes SI ESTÁN LISTAS EN 4s, sino devuelve sin imágenes
+    const result = await Promise.race([
+      loadImagesPromise,
+      new Promise<Array<{name: string; image: string}>>((resolve) => {
+        setTimeout(() => {
+          console.log('[getTopArtists] Timeout fetching images, returning artists without images');
+          resolve(selectedNames.map(name => ({ name, image: '' })));
+        }, 4000);
       })
-    );
-
-    return artists;
+    ]);
+    
+    return result;
   } catch (error) {
     console.error('Error getting top artists:', error);
     return defaultTopArtists().slice(0, limit);
@@ -1144,11 +1166,14 @@ export async function searchArtists(query: string, limit: number = 10): Promise<
   if (!query || query.length < 2) return [];
   
   try {
-    const response = await axios.get(`${DEEZER_API}/search/artist`, {
-      params: { q: query, limit }
-    });
+    const response: any = await Promise.race([
+      axios.get(`${DEEZER_API}/search/artist`, {
+        params: { q: query, limit }
+      }),
+      new Promise((_, reject) => setTimeout(() => reject(new Error('timeout')), 5000))
+    ]);
 
-    if (!response.data.data || response.data.data.length === 0) {
+    if (!response.data || !response.data.data || response.data.data.length === 0) {
       return [];
     }
 

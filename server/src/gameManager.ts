@@ -375,6 +375,36 @@ export async function startGame(
   room.gameConfig = config;
   room.isGameStarted = true;
 
+  // Wrapper con timeout global de 20 segundos para TODO el arranque
+  return Promise.race([
+    startGameInternal(room, config, onProgress),
+    new Promise<boolean>((resolve) => {
+      setTimeout(() => {
+        console.warn(`[StartGame] TIMEOUT after 20s, using fallback values for ${config.selectionType}`);
+        
+        // Fallback: configurar mínimo para que al menos comience el juego
+        if (config.selectionType === 'year' && config.yearRange) {
+          room.totalRounds = Math.min(5, config.yearRange.end - config.yearRange.start + 1);
+        } else {
+          room.totalRounds = config.totalRounds || 10;
+        }
+        
+        if (onProgress) {
+          onProgress(room.totalRounds, room.totalRounds);
+        }
+        
+        saveRoomAsync(room);
+        resolve(true); // Seguir adelante aunque incompleto
+      }, 20000);
+    })
+  ]);
+}
+
+async function startGameInternal(
+  room: Room,
+  config: GameConfig,
+  onProgress?: LoadingProgressCallback
+): Promise<boolean> {
   try {
     if (config.selectionType === 'year' && config.yearRange) {
       // ---- Modo AÑO: arranque robusto (menos requests simultáneas) ----
@@ -471,7 +501,7 @@ export async function startGame(
     saveRoomAsync(room);
     return true;
   } catch (error) {
-    console.error(`[StartGame] FAILED with error:`, error);
+    console.error(`[StartGameInternal] FAILED with error:`, error);
     return false;
   }
 }
