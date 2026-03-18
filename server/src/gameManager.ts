@@ -33,8 +33,8 @@ function saveRoomAsync(room: Room): void {
   saveRoomToRedis(room).catch(err => console.warn('Failed to save room to Redis:', err));
 }
 
-async function getRoomFromRedis(roomId: string): Promise<Room | null> {
-  if (!redisClient) return null;
+async function getRoomFromRedis(roomId: string): Promise<Room | undefined> {
+  if (!redisClient) return undefined;
   const key = `room:${roomId}`;
   const data = await redisClient.get(key);
   if (data) {
@@ -42,7 +42,7 @@ async function getRoomFromRedis(roomId: string): Promise<Room | null> {
     room.usedSongIds = new Set(room.usedSongIds as any);
     return room;
   }
-  return null;
+  return undefined;
 }
 
 async function deleteRoomFromRedis(roomId: string): Promise<void> {
