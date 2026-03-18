@@ -150,6 +150,16 @@ io.on('connection', (socket) => {
   });
 
 
+  socket.on('start-previews', ({ roomId }) => {
+    console.log(`[Socket] start-previews in room ${roomId}`);
+    io.to(roomId).emit('previews-started');
+  });
+
+  socket.on('start-voting', ({ roomId }) => {
+    console.log(`[Socket] start-voting in room ${roomId}`);
+    io.to(roomId).emit('voting-started');
+  });
+
   socket.on('start-timer', ({ roomId }) => {
     gameManager.startTimer(roomId);
     io.to(roomId).emit('timer-started');
