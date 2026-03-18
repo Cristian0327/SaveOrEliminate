@@ -193,8 +193,9 @@ function App() {
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     const roomIdFromUrl = params.get('room');
-    if (roomIdFromUrl && roomIdFromUrl.length === 6) {
-      setPendingRoomId(roomIdFromUrl);
+    const normalizedRoomId = roomIdFromUrl?.trim().toUpperCase();
+    if (normalizedRoomId && normalizedRoomId.length === 6) {
+      setPendingRoomId(normalizedRoomId);
       setCurrentScreen('enter-name');
       setScreenHistory(['home', 'enter-name']);
     }
@@ -209,7 +210,7 @@ function App() {
           if (action === 'create') {
             navigateTo('enter-name');
           } else {
-            setPendingRoomId(roomId || null);
+            setPendingRoomId(roomId?.trim().toUpperCase() || null);
             navigateTo('enter-name');
           }
         }} />;
@@ -219,7 +220,7 @@ function App() {
           onSubmit={(name, avatar) => {
             setPlayerName(name);
             if (pendingRoomId) {
-              socket.emit('join-room', { roomId: pendingRoomId, playerName: name, playerAvatar: avatar });
+              socket.emit('join-room', { roomId: pendingRoomId.trim().toUpperCase(), playerName: name, playerAvatar: avatar });
             } else {
               socket.emit('create-room', { playerName: name, playerAvatar: avatar });
             }

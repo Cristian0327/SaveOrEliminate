@@ -95,14 +95,16 @@ io.on('connection', (socket) => {
     }
   });
 
-  socket.on('join-room', ({ roomId, playerName, playerAvatar }) => {
+  socket.on('join-room', async ({ roomId, playerName, playerAvatar }) => {
     try {
-      const room = gameManager.joinRoom(roomId, playerName, socket.id, playerAvatar);
+      const normalizedRoomId = String(roomId ?? '').trim().toUpperCase();
+      await gameManager.getRoomWithRedis(normalizedRoomId);
+      const room = gameManager.joinRoom(normalizedRoomId, playerName, socket.id, playerAvatar);
       if (room) {
-        socket.join(roomId);
+        socket.join(normalizedRoomId);
         socket.emit('room-joined', room);
-        io.to(roomId).emit('player-joined', room);
-        console.log(`[Socket] ${playerName} joined room ${roomId}`);
+        io.to(normalizedRoomId).emit('player-joined', room);
+        console.log(`[Socket] ${playerName} joined room ${normalizedRoomId}`);
       } else {
         socket.emit('error', { message: 'La sala no fue encontrada o está llena' });
       }
