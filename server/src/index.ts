@@ -210,7 +210,7 @@ io.on('connection', (socket) => {
 
   socket.on('start-previews', ({ roomId }) => {
     console.log(`[start-previews] Starting previews in room ${roomId}`);
-    io.to(roomId).emit('previews-ready');
+    io.to(roomId).emit('previews-started');
   });
 
   socket.on('start-voting', ({ roomId }) => {
