@@ -1,6 +1,6 @@
 import { io, Socket } from 'socket.io-client';
 
-// Conectar al servidor: en producción usa la variable de entorno, en desarrollo usa localhost o IP local
+// Conectar al servidor
 const getServerUrl = () => {
   if (typeof window === 'undefined') return 'http://localhost:3001';
   
@@ -9,31 +9,20 @@ const getServerUrl = () => {
                        !window.location.hostname.includes('192.168');
   
   if (isProduction) {
-    // En producción, SIEMPRE necesita VITE_API_URL configurado
-    const apiUrl = (import.meta as any).env.VITE_API_URL;
+    // En producción: usar VITE_API_URL o fallback a Render
+    const apiUrl = (import.meta as any).env.VITE_API_URL || 'https://save-or-eliminate-server.onrender.com';
     console.log('[Socket] Production mode - API URL:', apiUrl);
-    if (!apiUrl) {
-      console.error('[Socket] ERROR: VITE_API_URL no configurado en Vercel');
-      throw new Error('VITE_API_URL environment variable not set');
-    }
     return apiUrl;
   }
   
-  // En desarrollo, conecta a localhost:3001
+  // En desarrollo: conecta a localhost:3001
   const url = `http://localhost:3001`;
   console.log('[Socket] Development mode - connecting to:', url);
   return url;
 };
 
-let serverUrl = '';
-try {
-  serverUrl = getServerUrl();
-} catch (err) {
-  console.error('[Socket] Fatal error getting server URL:', err);
-  serverUrl = 'http://localhost:3001'; // Fallback
-}
-
-console.log('[Socket] Connecting to:', serverUrl);
+const serverUrl = getServerUrl();
+console.log('[Socket] Final URL:', serverUrl);
 
 export const socket: Socket = io(serverUrl, {
   autoConnect: true,
